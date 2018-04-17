@@ -12,9 +12,9 @@
 \usepackage{xgreek}
 	\nogreekalph
 
-%
-\setmainfont{Times New Roman}
 %\usepackage{newtxmath}
+\setmainfont{Times New Roman}
+
 
 \usepackage{geometry}
 \geometry{
@@ -46,6 +46,21 @@
 \usepackage{standalone}
 \usepackage{float}
 \usepackage{parskip}
+
+%tikz
+\usepackage{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes,positioning,matrix}
+
+%matlab2tikz
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+%% the following commands are needed for some matlab2tikz features
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{grffile}
+%\usepackage{amsmath}
 
 \usepackage{cite}
 
@@ -190,6 +205,8 @@
 %\chapter{(τίτλος κεφαλαίου 1)}
 \pagenumbering{arabic}
 \include{chapters/introduction}
+\include{chapters/mathematicalTools}
+
 %\include{chapters/introduction}
 
 
