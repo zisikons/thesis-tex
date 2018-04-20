@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=newest}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows}
+\usetikzlibrary{fadings}
+
+\begin{document}
+	
+	\definecolor{blue_mat}{rgb}{0.00000,0.44700,0.74100}%
+	\definecolor{orange_mat}{rgb}{0.85000,0.32500,0.09800}%
+	
+	\begin{tikzpicture}
+	\begin{axis}[
+	axis lines=middle,
+	clip=false,
+	ymin=-0.1,
+	xmin=-0.1,
+	xmax=3,
+	xtick = {0,1,2,3},
+	xlabel = {$x$},
+	ylabel = {$y$},
+	yticklabels=\empty,
+	%legend pos=north west,
+	legend style={at={(0.05,0.97)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black},
+	every axis x label/.style={
+		at={(ticklabel* cs:1.02)},
+		anchor=west,
+	},
+	every axis y label/.style={
+		at={(ticklabel* cs:1.01)},
+		anchor=south
+	},
+	]
+	\begin{scope}
+	\shade[top color=yellow,bottom color=white,opacity=0.3]
+	(0.0,0.0) rectangle (1,-0.3);
+	\shade[top color=blue,bottom color=white,opacity=0.1]
+	(1.0,0.0) rectangle (2,-0.3);
+	\end{scope}
+	\node at (0.5,-0.15) {$\Omega_1$};
+	\node at (1.5,-0.15) {$\Omega_2$};
+	
+	\addplot+[color=blue_mat,mark=none,samples=200,domain=0.001:2.0,line width=1.2pt, name path = A] {sqrt(x)};
+	\addlegendentry{$f(x)$}
+	\addplot+[color=orange_mat,mark=none,samples=200,domain=0.001:1,line width=1.2pt,] {1.1090*x};
+	\addlegendentry{$\hat{f}(x)$}
+	\addplot+[color=orange_mat,mark=none,samples=200,domain=1:2.0,line width=1.2pt, name path = B] {-0.8445*(x-1) + 1.1090*x};
+	
+	\addplot+[dashed,color=blue_mat,mark=none,samples=200,domain=2.0:2.5,line width=1.2pt] {sqrt(x)};
+	
+	\addplot+[dashed,color=orange_mat,mark=none,samples=200,domain=2.0:2.5,line width=1.2pt] {-0.8445*(x-1) + 1.1090*x};
+	
+	\draw[dashed] (1,0) -- (1,1.1090);
+	\draw[dashed] (2,0) -- (2,2*1.1090-0.8445);
+	
+	\addplot [gray!30] fill between [of=A and B];
+	
+	
+	\end{axis}
+
+	
+	\end{tikzpicture}
+	
+\end{document}
