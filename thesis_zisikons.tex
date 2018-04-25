@@ -8,10 +8,14 @@
 \usepackage[no-math]{fontspec}
 \usepackage{amsmath}
 \usepackage{amssymb}
+
 \usepackage{mathtools}
 \usepackage{xltxtra}
 \usepackage{xgreek}
 	\nogreekalph
+
+\usepackage{amsthm}
+\renewenvironment{proof}{{\bfseries Απόδειξη}}{\qed}
 
 %\usepackage{newtxmath}
 \setmainfont{Times New Roman}
@@ -66,6 +70,8 @@
 
 % Cancel Math
 \usepackage[makeroom]{cancel}  % \cancel math
+\usepackage{accents}
+\newcommand{\barbelow}[1]{\underaccent{\bar}{#1}}
 
 \usepackage{wrapfig}
 
@@ -166,7 +172,8 @@
 \thispagestyle{plain} \null
 \vfill
 \begin{flushright}
-	\textit{To last minute panic, the best concentration pill ever invented.}
+	\textit{todo}
+	%\textit{To last minute panic, the best concentration pill ever invented.}
 	\par\medskip
 \end{flushright}
 \vfill\vfill
