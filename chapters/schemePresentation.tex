@@ -259,7 +259,132 @@ d(t) = \begin{bmatrix}d_1(t) & \dots & d_m(t)\end{bmatrix}^T
              &= \frac{x^{(n)}(t) + d(t) - \xi(t) \dot{\rho}(t)}{\rho(t)}\\
              &=\frac{F(x) + G(x)u(t) + d(t) - \xi(t)\dot{\rho}(t)}{\rho(t)}
 \end{split}
+\label{eq:xi_dot}
 \end{equation}
 η οποία αποτελεί σημείο έναρξης για την μαθηματική ανάλυση που θα ακολουθήσει.
 
+Όπως περιγράφεται στην παράγραφο $\ref{sec:ppc}$, σημείο κλειδί για την επιτυχία του Ελέγχου Προδιαγεγραμμένης απόκρισης είναι οι συναρτήσεις μετασχηματισμού $T$. Έτσι λοιπόν, εδώ ορίζουμε τις συναρτήσεις μετασχηματισμού ως:
+\begin{equation}
+	T(\xi_i) = \ln \left( \frac{1 + \xi_i(t)}{1 - \xi_i(t)} \right),
+	\quad i=1,\dots,m
+\end{equation}
+Και εδώ σημειώνεται πως θα μπορούσαμε να ορίσουμε προδιαγραφές για την υπερύψωση κάθε υποσυστήματος εισάγοντας μια διαφορετική συνάρτηση μετασχηματισμού $T_i(\cdot)$ για κάθε υποσύστημα. Παρόλα αυτά, κάτι τέτοιο δεν είναι αναγκαίο για τις ανάγκες της παρούσας εφαρμογής αναγνώρισης οπότε επιλέγεται μια συνάρτηση μετασχηματισμού $T(\cdot)$ για όλα τα υποσυστήματα, με σκοπό την απλοποίηση του σχήματος ελέγχου.
+
+Τέλος, το διάνυσμα $T(\xi)$ ορίζεται ώς :
+\begin{equation*}
+	T(\xi(t)) = \begin{bmatrix}
+	\ln \left( \frac{1 + \xi_1(t)}{1 - \xi_1(t)} \right) \\
+	\vdots \\
+	\ln \left( \frac{1 + \xi_m(t)}{1 - \xi_m(t)} \right)
+	\end{bmatrix}
+	\in \mathbb{R}^m
+\end{equation*}
+
+
 \section{Μαθηματική Ανάλυση}
+Έστω το σύστημα της εξίσωσης $(\ref{eq:mimo_nonlinear})$ υπό τις υποθέσεις της παραγράφου $\ref{assumptions}$, και οι προσεγγίσεις των αγνώστων συναρτήσεων του συστήματος των εξισώσεων $todo$.
+
+Η είσοδος ελέγχου του συστήματος $u(t) \in \mathbb{R}^m$ επιλέγεται ως:
+\begin{equation}
+	u(t) = -k T(\xi(t)) - \hat{\Phi}(x,t) 
+	     - \hat{\Gamma}(x,t) \left( d(t) - \xi(t) \dot{\rho}(t) \right)
+	     \in \mathbb{R}^m
+	\label{eq:schema_control_input}
+\end{equation}
+και οι νόμοι προσαρμογής των βαρών την προσεγγίσεων $\hat{\varphi}_i(x)$ και $\hat{\gamma}_{ij}(x)$ ως:
+\begin{equation}
+\begin{alignedat}{3}
+	\dot{\hat{w}}_{\varphi_i}(t) &= 
+	\beta_{\varphi_i} \frac{\xi_i(t)}{\rho(t)} Z_{\Phi}(x) 
+	\in \mathbb{R}^{q_{\Phi}}, \quad &&i &&= 1,\dots,m \\
+	%%%%%
+	\dot{\hat{w}}_{\gamma_{ij}}(t) &= \beta_{\gamma_{ij}} \frac{\xi_i(t)}{\rho(t)}
+	\big( d_j(t) - \xi_j(t) \dot{\rho}(t) \big) Z_{\Gamma}(x)
+	\in \mathbb{R}^{q_{\Gamma}},
+	\quad i,&&j &&= 1,\dots,m
+\end{alignedat}
+\label{eq:schema_adapt_laws}
+\end{equation}
+όπου $k$ θετικό κέρδος ελέγχου, και $\beta_{\varphi_i}$ και $\beta_{\gamma_{ij}}$ τα κέρδη αναγνώρισης του σχήματος.
+
+\textbf{Θεώρημα:}\\
+Έστω ένα σύστημα ΠΕΠΕ που περιγράφεται από τις εξισώσεις $(\ref{eq:mimo_nonlinear})$ και ικανοποιεί τις υποθέσεις της παραγράφου $\ref{assumptions}$. Για αυτό το σύστημα, η είσοδος ελέγχου της εξίσωσης $(\ref{eq:schema_control_input})$ και οι νόμοι προσαρμογής της εξίσωσης $(\ref{eq:schema_adapt_laws})$ εγγυώνται πως 1) όλα τα σήματα κλειστού βρόγχου θα παραμένουν φραγμένα $\forall t\geq 0$ και 2) τα σφάλματα καταστάσεων $e_i^{(j)}(t)$ για $i=1,\dots,m$ και $j = 1,\dots,n_i$ θα συγκλίνουν στα σύνολα:
+\begin{equation}
+E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
+\frac{ 2^{j-1} \lim\limits_{t \rightarrow \infty}\rho(t)}{\lambda^{n_i - j}} \right\}
+\end{equation}
+
+\begin{proof}
+Έστω η υποψήφια συνάρτηση Lyapunov:
+\begin{equation}
+	\begin{split}
+	V(x,t) = \frac{\xi^T(t) G^{-1}(x) \xi(t)}{2} 
+		   % phi
+		   &+ \frac{1}{2} \sum_{i=1}^{m} \beta_{\varphi_i} 
+		   \tilde{w}_{\varphi_i}^{T} \tilde{w}_{\varphi_i} \\
+		   % gamma
+		   &+ \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} \beta_{\gamma_{ij}}
+		   \tilde{w}_{\varphi_{\gamma_{ij}}}^{T} \tilde{w}_{\varphi_{\gamma_{ij}}}
+	\end{split}
+	\label{eq:scheme_lyap}
+\end{equation}
+η οποία είναι θετικά ορισμένη αφού ο πίνακας $G(x)$ είναι θετικά ορισμένος, και κατά συνέπεια και ο αντίστροφος πίνακας $G^{-1}(x)$ είναι επίσης θετικά ορισμένος.
+
+Παραγωγίζοντας την σχέση $(\ref{eq:scheme_lyap})$ έχουμε:
+\begin{equation}
+\begin{split}
+	\dot{V}(x,t) &= \xi^T(t) G^{-1}(x) \dot{\xi}(t)
+		   + \sum_{i=1}^{m} \sum_{j=0}^{n_i - 1} 
+		     \frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} 
+		     \frac{\partial }{\partial t} x_i^{(j)} \\
+	% phi
+	& - \sum_{i=1}^{m} \beta_{\varphi_i} 
+	\tilde{w}_{\varphi_i}^{T} \dot{\hat{w}}_{\varphi_i} \\
+	% gamma
+	& - \sum_{i=1}^{m} \sum_{j=1}^{m} \beta_{\gamma_{ij}}
+	\tilde{w}_{\varphi_{\gamma_{ij}}}^{T} \dot{\hat{w}}_{\varphi_{\gamma_{ij}}}
+\end{split}
+\label{eq:scheme_lyap}
+\end{equation}
+
+Καθώς υποθέτουμε συστήματα \emph{Euler-Lagrange}, επεκτείνοντας την υπόθεση 2 για τις μερικές παραγώγους της $G^{-1}(x)$ ( εξίσωση $(\ref{eq:assump_2})$ προκύπτει:
+\begin{equation*}
+	\sum_{i=1}^{m} \sum_{j=0}^{n_i - 1} 
+	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} 
+	\frac{\partial }{\partial t} x_i^{(j)} = 
+	%
+	\sum_{i=1}^{m} \sum_{j=0}^{n_i - 2} 
+	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} 
+	x_i^{(j +1)}
+\end{equation*}
+Ο λόγος που η υπόθεση 2 είναι τόσο σημαντική είναι ακριβώς επειδή μας επιτρέπει αυτή την απλοποίηση, χωρίς την οποία θα εμφανιζόταν στην ανάλυση μας οι είσοδοι $u_i(t)$ με αγνώστους συντελεστές, καθιστώντας την ανάλυση μη εφικτή.
+
+Στην συνέχεια, αντικαθιστώντας την σχέση $(\ref{eq:xi_dot})$ έχουμε
+\begin{equation}
+	\begin{split}
+	\dot{V}(x,t) &= 
+	\frac{\xi^T(t)} {\rho(t)} G^{-1}(x) \left( F(x) + G(x)u(t) + d(t) - \xi(t)\dot{\rho}(t) \right)  \\
+	&+ \sum_{i=1}^{m} \sum_{j=0}^{n_i - 2} 
+	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} x_i^{(j +1)}\\
+	% phi
+	& - \sum_{i=1}^{m} \beta_{\varphi_i} 
+	\tilde{w}_{\varphi_i}^{T} \dot{\hat{w}}_{\varphi_i} 
+	% gamma
+	- \sum_{i=1}^{m} \sum_{j=1}^{m} \beta_{\gamma_{ij}}
+	\tilde{w}_{\varphi_{\gamma_{ij}}}^{T} \dot{\hat{w}}_{\varphi_{\gamma_{ij}}}
+	\end{split}
+	%\label{eq:scheme_lyap}
+\end{equation}
+
+Συνεχίζοντας με την ανάλυση του πρώτου όρου, αντικαθιστούμε την είσοδο ελέγχου $u(t)$ από την εξίσωση $(\ref{eq:schema_control_input})$:
+\begin{equation*}
+\begin{split}
+	\dot{V}_1(x) & := \frac{\xi^T(t)} {\rho(t)} G^{-1}(x) \Big( F(x) + G(x)u(t) + d(t) - \xi(t)\dot{\rho}(t) \Big)  \\
+	 &=\frac{\xi^T(t)} {\rho(t)} \Big( \Phi(x) + u(t) 
+	+  \Gamma(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big)  \Big) \\
+	 &=\frac{\xi^T(t)} {\rho(t)} \Big( T(\xi(t)) + \tilde{\Phi}(x)  
+	 +  \tilde{\Gamma}(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big)  \Big)
+\end{split}
+\end{equation*}
+
+\end{proof}
