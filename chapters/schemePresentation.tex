@@ -26,7 +26,7 @@ x   &:= \begin{bmatrix} x_1 &\cdots & x_1^{(n_1-1)} & \cdots &
         \end{bmatrix}^T \in \mathbb{R}^m
 \end{split}
 \end{equation*}
-όπου $x \in \mathbb{R}^n$ είναι το διάνυσμα καταστάσεων, $n$ η συνολική τάξη του συστήματος, $m$ ο αριθμός υποσυστημάτων και $u \in \mathbb{R}^m$ το διάνυσμα των εισόδων ελέγχου, και $y \in \mathbb{R}^m $ το διάνυσμα εξόδων. Το σύστημα της εξίσωσης $(\ref{eq:mimo_nonlinear})$ μπορεί να γραφτεί και στην πιο συμπαγή μορφή:
+όπου $x \in \mathbb{R}^n$ είναι το διάνυσμα καταστάσεων, $n$ η συνολική τάξη του συστήματος, $m$ ο αριθμός υποσυστημάτων $u \in \mathbb{R}^m$ το διάνυσμα των εισόδων ελέγχου, και $y \in \mathbb{R}^m $ το διάνυσμα εξόδων. Το σύστημα της εξίσωσης $(\ref{eq:mimo_nonlinear})$ μπορεί να γραφτεί στην πιο συμπαγή μορφή:
 \begin{equation}
 	x^{(n)} = F(x) + G(x)u
 	\label{eq:mimo_compact}
@@ -52,20 +52,22 @@ x   &:= \begin{bmatrix} x_1 &\cdots & x_1^{(n_1-1)} & \cdots &
 \subsection{Υποθέσεις} \label{assumptions}
 Σε αυτό το σημείο περιγράφονται κάποιες υποθέσεις που θα θεωρήσουμε ότι πληρούνται από το σύστημα που εξετάζεται. Οι υποθέσεις αυτές είναι θεμελιώδους σημασίας για την μαθηματική ανάλυση που ακολουθεί, και για συστήματα στα οποία δεν ισχύουν, ενδέχεται η εφαρμογή της μεθόδου που περιγράφει το κεφάλαιο να μην επιφέρει τα αποτελέσματα που εξασφαλίζει η μαθηματική ανάλυση.
 
-\textbf{Υπόθεση 1:} Ο πίνακας $G(x)$ είναι θετικά ορισμένος εντός ενός συνόλου $A \supset \Omega$, δηλαδή η μικρότερη ιδιοτιμή του συμμετρικού του πίνακα είναι μεγαλύτερη από μια θετική σταθερά $\lambda^*$ όπως περιγράφει η παρακάτω εξίσωση.
+\textbf{Υπόθεση 1:} Ο πίνακας $G(x)$ είναι θετικά ορισμένος εντός ενός κλειστού και συμπαγούς συνόλου $A \subset \mathbb{R}^n$, δηλαδή η μικρότερη ιδιοτιμή του συμμετρικού του πίνακα είναι μεγαλύτερη από μια θετική σταθερά $\lambda^*$ όπως περιγράφει η παρακάτω εξίσωση.
 \begin{equation}
 	\lambda_{min} \left(\frac{G(x) + G^T (x)}{2}\right) \geq \lambda^* > 0
 	,\quad \forall x \in A
 	\label{eq:assump_1}
 \end{equation}
 
-\textbf{Υπόθεση 2:} Το εξεταζόμενο σύστημα είναι σύστημα Euler–Lagrange, δηλαδή ο πίνακας $G(x)$ δεν είναι συνάρτηση του διανύσματος $x^{(n)}$, η μαθηματικά:
+\textbf{Υπόθεση 2:} Το εξεταζόμενο σύστημα είναι τύπου Euler–Lagrange, δηλαδή ο πίνακας $G(x)$ δεν είναι συνάρτηση του διανύσματος $x^{(n)}$, ή μαθηματικά:
 \begin{equation}
 	\frac{\partial G(x)}{\partial x^{(n_i-1)}} = 0, \quad \forall x \in \mathbb{R}^n, i = 1,\dots,m
 	\label{eq:assump_2}
 \end{equation}
 
-\textbf{Υπόθεση 3:} Το πλήρες διάνυσμα καταστάσεων $x \in \mathbb{R}^n$ είναι διαθέσιμο προς μέτρηση σε κάθε χρονική στιγμή $t$.
+\textbf{Υπόθεση 3:} Το πλήρες διάνυσμα καταστάσεων $x \in \mathbb{R}^n$ είναι διαθέσιμο προς μέτρηση σε κάθε χρονική στιγμή $t \geq 0$.
+
+\textbf{Υπόθεση 4:} Ο πίνακας $G(x)$ είναι τοπικά Lipschitz συνεχής στο σύνολο $A$ της υπόθεσης 1.
 
 \subsection{Διατύπωση του προβλήματος αναγνώρισης} \label{subsec:problem_definition}
 Τέλος, έχοντας ορίσει τόσο την δομή των συστημάτων με τα οποία ασχολείται η εργασία, όσο τις υποθέσεις που πρέπει αυτά τα συστήματα να ικανοποιούν, είμαστε σε θέση να διατυπώσουμε το πρόβλημα με το οποίο ασχολείται η παρούσα εργασία.
@@ -81,14 +83,24 @@ x   &:= \begin{bmatrix} x_1 &\cdots & x_1^{(n_1-1)} & \cdots &
 
 Για λόγους που δεν είναι εμφανής ακόμα, αλλά θα αποσαφηνισθούν κατά την μαθηματική ανάλυση, μέσω των δικτύων RBF θα προσπαθήσουμε να προσεγγίσουμε τις συναρτήσεις:
 \begin{equation}
-	\begin{matrix}
-	\varPhi(x) \coloneqq F(x)G^{-1}(x) & \: \text{και} &
-	\Gamma(x) \coloneqq G^{-1}(x)
-	\end{matrix}
-	\label{eq:approximate_functions}
+	\Phi(x) \coloneqq F(x)G^{-1}(x) = 
+	\begin{bmatrix}
+	\varphi_1(x) \\ \vdots \\ \varphi_m(x)
+	\end{bmatrix} \in \mathbb{R}^m
+	\label{eq:approximate_F}
+\end{equation}
+και
+\begin{equation}
+\Gamma(x) \coloneqq G^{-1}(x) = 
+\begin{bmatrix} \gamma_{11}(x) & \cdots & \gamma_{1m}(x) \\
+					 \vdots    & \ddots & \vdots         \\
+				\gamma_{m1}(x) & \cdots & \gamma_{mm}(x)
+\end{bmatrix}
+\label{eq:approximate_G}
 \end{equation}
 
-Καθώς το διάνυσμα $F(x)$ είναι συνάρτηση του πλήρους διανύσματος καταστάσεων $x \in \mathbb{R}^n$, ενώ ο πίνακας $G(x)$ είναι συνάρτηση μόνο των πρώτων $n_i - 1$ καταστάσεων κάθε υποσυστήματος $i$, θα χρησιμοποιηθεί διαφορετικό set οπισθοδρομητών για τις δυο αυτές περιπτώσεις, καθώς στην αντίθετη περίπτωση εισάγεται περιττή πολυπλοκότητα στην προσέγγιση της $\Gamma(x)$. Συνεπώς, συμβολίζουμε με $Z_{\varPhi}(x)$ το διάνυσμα οπισθοδρομητών για την προσέγγιση του διανύσματος $\varPhi(x)$ και με $Z_{\Gamma}(x)$ το διάνυσμα οπισθοδρομητών της $\Gamma(x)$.
+
+Καθώς το διάνυσμα $F(x)$ είναι συνάρτηση του πλήρους διανύσματος καταστάσεων $x \in \mathbb{R}^n$, ενώ ο πίνακας $G(x)$ είναι συνάρτηση μόνο των πρώτων $n_i - 1$ καταστάσεων κάθε υποσυστήματος $i$, θα χρησιμοποιηθεί διαφορετικό διάνυσμα οπισθοδρομητών για τις δυο αυτές περιπτώσεις, αφού αντίθετα εισάγεται περιττή πολυπλοκότητα στην προσέγγιση της $\Gamma(x)$. Συνεπώς, συμβολίζουμε με $Z_{\varPhi}(x)$ το διάνυσμα οπισθοδρομητών για την προσέγγιση του διανύσματος $\varPhi(x)$ και με $Z_{\Gamma}(x)$ το διάνυσμα οπισθοδρομητών της $\Gamma(x)$.
 
 Χρησιμοποιώντας την ιδιότητα προσέγγισης της παραγράφου $\ref{subsec:rbf_approximation_theorem}$, χωρίς βλάβη γενικότητας αντικαθιστούμε κάθε  συνάρτηση $\varphi_i(x)$ και $\gamma_{ij}(x)$ των $\varPhi(x)$ και $\Gamma(x)$ με τις προσεγγίσεις τους:
 \begin{equation}
@@ -98,51 +110,137 @@ x   &:= \begin{bmatrix} x_1 &\cdots & x_1^{(n_1-1)} & \cdots &
 \end{alignedat}
 \label{eq:rbf_approximations}
 \end{equation}
-όπου $q_{\varPhi}$ και $q_{\Gamma}$ το μέγεθος του κάθε νευρωνικού δικτύου, $w_{\varphi_i}^{*} \in \mathbb{R}^{q_{\varPhi}}$ και $w_{\gamma_{ij}}^{*} \in \mathbb{R}^{q_{\Gamma}}$ τα βέλτιστα βάρη των νευρωνικών δικτύων της αντίστοιχης συνάρτησης, και $\epsilon_{\varphi_i}(x)$ και $\epsilon_{\gamma_{ij}}(x)$ τα σφάλματα μοντελοποίησης, τα οποία έχουν ένα άγνωστο άνω φράγμα που περιγράφεται από τις εξισώσεις:
+όπου $w_{\varphi_i}^{*} \in \mathbb{R}^{q_{\varPhi}}$ και $w_{\gamma_{ij}}^{*} \in \mathbb{R}^{q_{\Gamma}}$ τα βέλτιστα βάρη των νευρωνικών δικτύων της αντίστοιχης συνάρτησης, $q_{\varPhi}$ και $q_{\Gamma}$ το μέγεθος του κάθε νευρωνικού δικτύου και $\epsilon_{\varphi_i}(x)$ και $\epsilon_{\gamma_{ij}}(x)$ τα σφάλματα μοντελοποίησης, τα οποία έχουν ένα άγνωστο άνω φράγμα που περιγράφεται από τις εξισώσεις:
 \begin{equation}
 \begin{alignedat}{3}
 	| \epsilon_{\varphi_i}(x) | &\leq \bar{\epsilon}_{\varphi_i}, \quad &&\forall x \in \Omega, \quad  i&&= 1,\dots,m \\
 	| \epsilon_{\gamma_{ij}}(x) | &\leq \bar{\epsilon}_{\gamma_{ij}}, \quad &&\forall x \in \Omega, \quad i,j &&= 1,\dots,m \\
 	\end{alignedat}
+	\label{eq:modelling_error_bounds}
 \end{equation}
 
-Με βάση την εξίσωση $(\ref{eq:rbf_approximations})$, γράφουμε τα $\varPhi(x)$ και $\Gamma(x)$ στην διανυσματική τους μορφή:
+Σε αυτό το σημείο, πρέπει να τονίσουμε πως στην προσπάθεια ελέγχου του συστήματος, το διάνυσμα $x(t)$ ενδέχεται να μη παραμένει πάντα εντός του συνόλου $\Omega$. Για να αντιμετωπιστεί αυτή η δυσκολία, παρατηρούμε πως, αφού οι συναρτήσεις $\Phi(x)$ και $\Gamma(x)$ είναι συνεχείς, και τα διάνυσμα οπισθοδρομητών $Z_{\Phi}(x)$ και $Z_{\Gamma}(x)$ είναι επίσης συνεχή, τότε και τα σφάλμα μοντελοποίησης:
 \begin{equation}
-\begin{split}
-	\varPhi(x) &= W_{\varPhi}^{*T}(x)Z_{\varPhi}(x) + \epsilon_{\varPhi}(x) \\ 
-	\Gamma(x) &= W_{\Gamma}^{*T}(x)Z_{\Gamma}(x) + \epsilon_{\Gamma}(x) \\
-\end{split}	
+\begin{alignedat}{2}
+\epsilon_{\varphi_i}(x) &= \varphi_i(x) - w_{\varphi_i}^{*T} Z_{\varPhi}(x) , \quad &\forall x \in A \\
+\epsilon_{\gamma_{ij}}(x) &= \gamma_{ij}(x) - w_{\gamma_{ij}}^{*T} Z_{\Gamma}(x) , \quad &\forall x \in A
+\end{alignedat}
+\label{eq:modelling_error_continuity}
 \end{equation}
-η οποία θα χρησιμοποιηθεί στην ανάλυση (μπορεί να αλλάξει άμα δεν βολεύει).
+είναι συνεχής συναρτήσεις. Παρόλο που όταν το $x(t)$ βρίσκεται εκτός του $\Omega$, δεν μπορούμε να εγγυηθούμε πως τα σφάλματα μοντελοποίησης φράζονται από την σχέση $(\ref{eq:modelling_error_bounds})$, η παραπάνω παρατήρηση μας επιτρέπει να συνεχίσουμε την ανάλυση.
 
-Τέλος, ορίζουμε τις προσεγγίσεις των συναρτήσεων $\varPhi(x)$ και $\Gamma(x)$ ως:
+Τέλος, ορίζουμε κάποια σήματα τα οποία θα χρειαστούν στην μαθηματική ανάλυση. Αρχικά, ορίζουμε τις προσεγγίσεις $\hat{\Phi}(x)$ και $\hat{\Gamma}(x)$ ως:
 \begin{equation}
-\begin{split}
-\hat{\varPhi}(x) &= \hat{W}_{\varPhi}^{T}(x)Z_{\varPhi}(x) \\ 
-\hat{\Gamma}(x) &= \hat{W}_{\Gamma}^{T}(x)Z_{\Gamma}(x)    \\
-\end{split}
-\label{eq:online_approximations}
+	\hat{\Phi}(x) = 
+	\begin{bmatrix}
+	\hat{\varphi}_1 \\ \vdots \\ \hat{\varphi}_m
+	\end{bmatrix}
+	= 
+	\begin{bmatrix}
+	 \hat{w}_{\varphi_1}^T Z_{\Phi}(x) \\ \vdots \\ \hat{w}_{\varphi_1}^T Z_{\Phi}(x)
+	\end{bmatrix}
 \end{equation}
-(ομοίως μπορεί να αλλάξει)
+και
+\begin{equation}
+\hat{\Gamma}(x) = 
+\begin{bmatrix} \hat{\gamma}_{11}(x) & \cdots & \hat{\gamma}_{1m}(x) \\
+	\vdots    & \ddots & \vdots         \\
+	\hat{\gamma}_{m1}(x) & \cdots & \hat{\gamma}_{mm}(x)
+\end{bmatrix}
+=
+\begin{bmatrix} \hat{w}_{\gamma_{11}}^T Z_{\Gamma}(x) & \cdots & \hat{w}_{\gamma_{1m}}^T Z_{\Gamma}(x) \\
+\vdots    & \ddots & \vdots         \\
+\hat{w}_{\gamma_{m1}}^T Z_{\Gamma}(x) & \cdots & \hat{w}_{\gamma_{mm}}^T Z_{\Gamma}(x)
+\end{bmatrix}
+\end{equation}
+
+Κατά δεύτερον, ορίζουμε τα σφάλματα προσέγγισης ως:
+\begin{equation}
+\begin{alignedat}{3}
+	\tilde{w}_{\varphi_i}(t) &= w_{\varphi_i}^* - \hat{w}_{\varphi_i}(t) \quad &&\forall t \geq 0, \quad  i&&= 1,\dots,m \\
+	\tilde{w}_{\gamma_{ij}}(t) &= w_{\gamma_{ij}}^* - \hat{w}_{\gamma_{ij}}(t)
+	\quad &&\forall t \geq 0, \quad  i,j&&= 1,\dots,m 
+	\end{alignedat}
+	\label{eq:parametric_errors}
+\end{equation}
+και συνεπώς μπορούμε να εκφράσουμε τα συνολικό σφάλμα προσέγγισης των συναρτήσεων ως:
+\begin{equation}
+\tilde{\Phi}(x) = \Phi(x) - \hat{\Phi}(x) = 
+	\begin{bmatrix}
+	\tilde{w}_{\varphi_1}^T Z_{\Phi}(x) \\ \vdots \\ \tilde{w}_{\varphi_1}^T Z_{\Phi}(x)
+	\end{bmatrix} + 
+	%%%%
+	\begin{bmatrix}
+	\epsilon_{\varphi_1}(x) \\ \vdots \\ \epsilon_{\varphi_m}(x) 
+	\end{bmatrix}
+\end{equation}
+και 
+\begin{equation}
+\tilde{\Gamma}(x) = \Gamma(x) - \hat{\Gamma}(x) = 
+\begin{bmatrix} \tilde{w}_{\gamma_{11}}^T Z_{\Gamma}(x) & \cdots & \tilde{w}_{\gamma_{1m}}^T Z_{\Gamma}(x) \\
+\vdots    & \ddots & \vdots         \\
+\tilde{w}_{\gamma_{m1}}^T Z_{\Gamma}(x) & \cdots & \tilde{w}_{\gamma_{mm}}^T Z_{\Gamma}(x)
+\end{bmatrix} +
+\begin{bmatrix} \epsilon_{\gamma_{11}}(x) & \cdots & \epsilon_{\gamma_{1m}}(x) \\
+\vdots    & \ddots & \vdots         \\
+\epsilon_{\gamma_{m1}}(x) & \cdots & \epsilon_{\gamma_{mm}}(x)
+\end{bmatrix}
+\end{equation}
+
+Τέλος, παραγωγίζοντας τις εξισώσεις $(\ref{eq:parametric_errors})$ έχουμε τις παραγώγους των παραμετρικών σφαλμάτων, οι οποίες εμφανίζονται κατά την μαθηματική ανάλυση:
+\begin{equation}
+\begin{alignedat}{3}
+\dot{\tilde{w}}_{\varphi_i}(t) &=  - \dot{\hat{w}}_{\varphi_i}(t) \quad &&\forall t \geq 0, \quad  i&&= 1,\dots,m \\
+\dot{\hat{w}}_{\gamma_{ij}}(t) &=  - \dot{\hat{w}}_{\gamma_{ij}}(t)
+\quad &&\forall t \geq 0, \quad  i,j&&= 1,\dots,m 
+\end{alignedat}
+\label{eq:parametric_error_derivatives}
+\end{equation}
 
 \subsubsection{Συνθήκη Επιμένουσας Διέγερσης}
 Με βάση τα συμπεράσματα της υποπαραγράφου \ref{subsec:rbf_PE}, για να επιτευχθεί σύγκλιση των βαρών $\hat{W}_{\varPhi}^{T}(x)$ και $\hat{W}_{\Gamma}^{T}(x)$ στα βέλτιστα βάση $W_{\varPhi}^{*T}$ και $W_{\Gamma}^{*T}$, απαιτείται ο σχεδιασμός και η παρακολούθηση μιας περιοδικής τροχιάς αναφοράς $x_d(t)$ η οποία θα διέρχεται από όλα τα κέντρα $c$ των νευρωνικών δικτύων RBF.
 
-\subsection{Σύστημα Αναφοράς και ορισμός σφαλμάτων}
-Στην προσπάθεια αναγνώρισης της άγνωστης δυναμικής του συστήματος $(\ref{eq:canonical_system})$, απαιτείται ένα σύστημα αναφοράς το οποίο θα παράγει την επιθυμητή τροχιά $x_d(t)$. Στην παράγραφο $\ref{sec:ref_system}$ αναπτύχθηκε ένα τέτοιο σύστημα, για συστήματα μιας εισόδου μιας εξόδου. Σε αυτό το σημείο θα δείξουμε πως αυτό χρησιμοποιείται για την επίλυση του προβλήματος της παραγράφου $\ref{subsec:problem_definition}$.
+\subsection{Σύστημα Αναφοράς} \label{subsec:schema_ref}
+Στην προσπάθεια αναγνώρισης της άγνωστης δυναμικής του συστήματος $(\ref{eq:canonical_system})$, απαιτείται ένα σύστημα αναφοράς το οποίο θα παράγει την επιθυμητή τροχιά $x_d(t)$. Σε αυτή την παράγραφο γίνεται μια εισαγωγή στον συμβολισμό που θα χρησιμοποιηθεί παρακάτω, καθώς και σε όλες τις υποθέσεις που γίνονται για αυτό το σύστημα αναφοράς. 
 
-Για κάθε υποσύστημα $i$ του συστήματος $\ref{eq:mimo_nonlinear}$, ορίζω ένα σύστημα αναφοράς $\Sigma_i$, το οποίο υλοποιεί την τροχιά αναφοράς $x_{id}(t)$, καθώς και τις παραγώγους της μέχρι τάξης $n_i$: $x_{id}^{(j)},\: j = 1,\dots,n_i$. Τέλος, η $n_i$-οστή παράγωγος του συστήματος αναφοράς, δίνεται από τον τύπο:
+%Στην παράγραφο $\ref{sec:ref_system}$ αναπτύχθηκε ένα τέτοιο σύστημα, για συστήματα μιας εισόδου μιας εξόδου. Σε αυτό το σημείο θα δείξουμε πως αυτό χρησιμοποιείται για την επίλυση του προβλήματος της παραγράφου $\ref{subsec:problem_definition}$.
+
+Για κάθε υποσύστημα $i$ του συστήματος $\ref{eq:mimo_nonlinear}$, ορίζω ένα σύστημα αναφοράς $\Sigma_i$ το οποίο υλοποιεί την τροχιά αναφοράς $x_{id}(t)$, καθώς και τις παραγώγους της μέχρι τάξης $n_i-1$: $x_{id}^{(j)},\: j = 1,\dots,n_i-1$. Τέλος, η $n_i$-οστή παράγωγος του συστήματος αναφοράς, δίνεται από τον τύπο:
 \begin{equation}
 	x_{id}^{(n_i)}(t) = \nu_i(t), \quad \forall i = 1,\dots,m
 \end{equation}
-όπου $\nu_i(t)$ είναι η είσοδος αναφοράς του $i$-οστού υποσυστήματος. Η είσοδος αυτή υπολογίζεται σύμφωνα με τον τύπο:
-\begin{equation}
-	\nu_i(t) = \sum_{k=n_i + 1}^{2(n_i + 1)} \prod_{l = 1}^{n_i} (k-l) \alpha_k t^{k - n_i - 1}
-	,\quad \forall t \in [t_0,t_0+\Delta T]
-\end{equation}
-Στο σημείο αυτό δεν χρειάζεται να ορίσουμε τον τρόπο με τον οποίο επιλέγονται οι παράμετροι $\alpha_k$, αλλά θα γίνει εμφανές στην συνέχεια της ανάλυσης.
+όπου $\nu_i(t)$ είναι η είσοδος αναφοράς του $i$-οστού υποσυστήματος. Σε αυτό το σημείο δεν είναι απαραίτητος ο ακριβής ορισμός των $\nu_i(t)$. Αν'αυτού, ορίζουμε κάποιες επιθυμητές ιδιότητες που πρέπει να ικανοποιούνται έτσι ώστε να είναι εφικτή η μαθηματική επαλήθευση του σχήματος.
+
+Οι ιδιότητες που πρέπει να ικανοποιεί κάθε υποσύστημα, είναι αφενός να παράγει μια φραγμένη τροχιά αναφοράς $x_{id}(t)$, καθώς και να διατηρεί φραγμένες και όλες της παραγώγους μέχρι τάξης $n_i - 1$, δηλαδή το διάνυσμα καταστάσεων αναφοράς:
+\begin{equation*}
+	\bar{x}_{id}(t) = 
+	\begin{bmatrix}
+	x_{id}(t) \\ \dot{x}_{id}(t) \\ \vdots \\ x_{id}^{(n_i-1)}(t)
+	\end{bmatrix}
+\end{equation*}
+να παραμένει φραγμένο σε ένα κλειστό συμπαγές σύνολο $\mathcal{X}_{id}$. Αφετέρου, πρέπει οι είσοδοι αναφοράς $\nu_i(t)$ να είναι συνεχή και φραγμένα σήματα.
+
+Τέλος, στην ανάλυση μας θα υποθέσουμε πως όλα τα σήματα αναφοράς $x_{id}^{(j)},\: j = 1,\dots,n_i-1$, καθώς και οι είσοδοι αναφοράς $\nu_i(t)$ είναι διαθέσιμα σήματα, και συνεπώς θα χρησιμοποιηθούν στην σχεδίαση του νόμου ελέγχου καθώς και στους νόμους προσαρμογής.
+%όπου $\nu_i(t)$ είναι η είσοδος αναφοράς του $i$-οστού υποσυστήματος. Η είσοδος αυτή υπολογίζεται σύμφωνα με τον τύπο:
+%\begin{equation}
+%	\nu_i(t) = \sum_{k=n_i + 1}^{2(n_i + 1)} \prod_{l = 1}^{n_i} (k-l) \alpha_k t^{k - n_i - 1}
+%	,\quad \forall t \in [t_0,t_0+\Delta T]
+%\end{equation}
+%Στο σημείο αυτό δεν χρειάζεται να ορίσουμε τον τρόπο με τον οποίο επιλέγονται οι παράμετροι $\alpha_k$, αλλά θα γίνει εμφανές στην συνέχεια της ανάλυσης.
 
 %όπου τα βάρη $a$ κάθε υποσυστήματος υπολογίζονται ανάλογα με την επιθυμητή μετάβαση, όπως περιγράφεται στην παράγραφο $(\ref{subseq:ref_parameterization})$.
+
+Χρησιμοποιώντας $m$ τέτοια υποσυστήματα, παράγουμε την συνολική τροχιά αναφοράς του συστήματος:
+\begin{equation}
+x_d(t) = \begin{bmatrix}
+x_{1d}(t) & \dots & x_{1d}^{(n_1-1)} & \dots & 
+x_{md}(t) & \dots & x_{md}^{(n_m-1)}
+\end{bmatrix} \in \mathbb{R}^n
+\label{eq:x_desired}
+\end{equation}
+η οποία είναι φραγμένη σε ένα κλειστό και συμπαγές σύνολο $\mathcal{X}_d$.
+
+
 
 \textbf{Σημείωση:} Κάθε σύστημα αναφοράς $\Sigma_i$ που περιγράψαμε στην προηγούμενη παράγραφο, έχει στην ουσία την μορφή της εξίσωσης $(\ref{eq:ref_system})$, δηλαδή:
 \begin{equation*}
@@ -157,14 +255,6 @@ x   &:= \begin{bmatrix} x_1 &\cdots & x_1^{(n_1-1)} & \cdots &
 \end{equation*}
 απλά χρησιμοποιούμε διαφορετικό συμβολισμό για να διατηρήσουμε την συμβατότητα με την σχέση $(\ref{eq:canonical_system})$.
 
-Χρησιμοποιώντας $m$ τέτοια υποσυστήματα, παράγουμε την συνολική τροχιά αναφοράς του συστήματος:
-\begin{equation}
-	x_d(t) = \begin{bmatrix}
-	x_{1d}(t) & \dots & x_{1d}^{(n_1-1)} & \dots & 
-	x_{md}(t) & \dots & x_{md}^{(n_m-1)}
-	\end{bmatrix} \in \mathbb{R}^n
-	\label{eq:x_desired}
-\end{equation}
 
 \subsection{Έλεγχος του συστήματος} % Η ίσως Ελεγχος και ΣΚΒ.
 Για την λύση του προβλήματος παρακολούθησης της τροχιάς $x_d(t)$ θα χρησιμοποιηθεί ο Έλεγχος Προδιαγεγραμμένης Απόκρισης. Σε αυτό το κεφάλαιο ορίζονται τα σήματα κλειστού βρόγχου που θα χρησιμοποιηθούν στην ανάλυση, καθώς και διατυπώνεται επίσημα ο στόχος ελέγχου. Η απόδειξη πως η προτεινόμενη μεθοδολογία επιτυγχάνει τον στόχο ελέγχου γίνεται στο υποκεφάλαιο (τοδο).
@@ -224,12 +314,13 @@ d(t) = \begin{bmatrix}d_1(t) & \dots & d_m(t)\end{bmatrix}^T
 	\label{eq:control_objective}
 \end{equation}
 }
-
-Ορίζοντας το προβλήματος ελέγχου με τον παραπάνω τρόπο, επιτυγχάνεται σημαντική απλοποίηση του σχήματος ελέγχου σε σύγκριση με τον κλασσικό έλεγχο προδιαγεγραμμένης απόκρισης της εργασίας~\cite{bechlioulis2008robust}. Ταυτόχρονα, λύνεται το πρόβλημα παρακολούθησης της τροχιάς $x_d(t)$ στην μόνιμη κατάσταση, αφού με βάση την ανάλυση του βιβλίου~\cite[p.276-280]{slotine1991applied}, ικανοποίηση της εξίσωσης $(\ref{eq:control_objective})$ συνεπάγεται σε σύγκλιση των σφαλμάτων $e_i^{(j)}(t),\: i = 1,\dots,m, \: j = 1,\dots,n_i-1$ στα σύνολα:
+Ορίζοντας το προβλήματος ελέγχου με τον παραπάνω τρόπο, επιτυγχάνεται σημαντική απλοποίηση του σχήματος ελέγχου σε σύγκριση με τον κλασσικό έλεγχο προδιαγεγραμμένης απόκρισης της εργασίας~\cite{bechlioulis2008robust}. Ταυτόχρονα, λύνεται το πρόβλημα παρακολούθησης της τροχιάς $x_d(t)$, αφού με βάση την ανάλυση της εργασίας~\cite{bechlioulis2013output} (πρόταση 2) , με την ικανοποίηση της εξίσωσης $(\ref{eq:control_objective})$ συνεπάγεται τα σφάλματα  $e_i^{(j)}(t),\: i = 1,\dots,m, \: j = 1,\dots,n_i-1$ θα παραμένουν φραγμένα στα σύνολα:
 \begin{equation}
-	E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
+	E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} : 
+			| e_i^{(j)}(t)| < \bar{e}_i^{(j)} + 
 			\frac{ 2^{j-1} \lim\limits_{t \rightarrow \infty}\rho(t)}{\lambda^{n_i - j}} \right\}
 \end{equation}
+όπου $\bar{e}_i^{(j)}$ μια παράμετρος που εξαρτάται από τις αρχικές συνθήκες.
 
 Σε αυτό το σημείο σημειώνεται πως χρησιμοποιείται μια καθολική συνάρτηση επίδοσης $\rho(t)$ για όλα τα υποσυστήματα, καθώς μια αρκεί για να καλύψει τις απαιτήσεις της εφαρμογής. Έτσι, αποφεύγεται η εισαγωγή περιττής πολυπλοκότητας τόσο στον τελικό ελεγκτή όσο και στην ανάλυση που θα ακολουθήσει.
 
@@ -261,9 +352,8 @@ d(t) = \begin{bmatrix}d_1(t) & \dots & d_m(t)\end{bmatrix}^T
 \end{split}
 \label{eq:xi_dot}
 \end{equation}
-η οποία αποτελεί σημείο έναρξης για την μαθηματική ανάλυση που θα ακολουθήσει.
 
-Όπως περιγράφεται στην παράγραφο $\ref{sec:ppc}$, σημείο κλειδί για την επιτυχία του Ελέγχου Προδιαγεγραμμένης απόκρισης είναι οι συναρτήσεις μετασχηματισμού $T$. Έτσι λοιπόν, εδώ ορίζουμε τις συναρτήσεις μετασχηματισμού ως:
+Όπως περιγράφεται στην παράγραφο $\ref{sec:ppc_introduction}$, σημείο κλειδί για την επιτυχία του Ελέγχου Προδιαγεγραμμένης απόκρισης είναι οι συναρτήσεις μετασχηματισμού $T$. Έτσι λοιπόν, εδώ ορίζουμε τις συναρτήσεις μετασχηματισμού ως:
 \begin{equation}
 	T(\xi_i) = \ln \left( \frac{1 + \xi_i(t)}{1 - \xi_i(t)} \right),
 	\quad i=1,\dots,m
@@ -282,6 +372,7 @@ d(t) = \begin{bmatrix}d_1(t) & \dots & d_m(t)\end{bmatrix}^T
 
 
 \section{Μαθηματική Ανάλυση}
+\subsection{Πρόβλημα παρακολούθησης τροχιάς}
 Έστω το σύστημα της εξίσωσης $(\ref{eq:mimo_nonlinear})$ υπό τις υποθέσεις της παραγράφου $\ref{assumptions}$, και οι προσεγγίσεις των αγνώστων συναρτήσεων του συστήματος των εξισώσεων $todo$.
 
 Η είσοδος ελέγχου του συστήματος $u(t) \in \mathbb{R}^m$ επιλέγεται ως:
@@ -291,7 +382,7 @@ d(t) = \begin{bmatrix}d_1(t) & \dots & d_m(t)\end{bmatrix}^T
 	     \in \mathbb{R}^m
 	\label{eq:schema_control_input}
 \end{equation}
-και οι νόμοι προσαρμογής των βαρών την προσεγγίσεων $\hat{\varphi}_i(x)$ και $\hat{\gamma}_{ij}(x)$ ως:
+και οι νόμοι προσαρμογής των βαρών των προσεγγίσεων $\hat{\varphi}_i(x)$ και $\hat{\gamma}_{ij}(x)$ ως:
 \begin{equation}
 \begin{alignedat}{3}
 	\dot{\hat{w}}_{\varphi_i}(t) &= 
@@ -305,13 +396,16 @@ d(t) = \begin{bmatrix}d_1(t) & \dots & d_m(t)\end{bmatrix}^T
 \end{alignedat}
 \label{eq:schema_adapt_laws}
 \end{equation}
-όπου $k$ θετικό κέρδος ελέγχου, και $\beta_{\varphi_i}$ και $\beta_{\gamma_{ij}}$ τα κέρδη αναγνώρισης του σχήματος.
+όπου $k$ θετικό κέρδος ελέγχου, και $\beta_{\varphi_i}$ και $\beta_{\gamma_{ij}}$ τα κέρδη αναγνώρισης του σχήματος, τα οποία πρέπει να είναι επίσης θετικά.
+
 
 \textbf{Θεώρημα:}\\
-Έστω ένα σύστημα ΠΕΠΕ που περιγράφεται από τις εξισώσεις $(\ref{eq:mimo_nonlinear})$ και ικανοποιεί τις υποθέσεις της παραγράφου $\ref{assumptions}$. Για αυτό το σύστημα, η είσοδος ελέγχου της εξίσωσης $(\ref{eq:schema_control_input})$ και οι νόμοι προσαρμογής της εξίσωσης $(\ref{eq:schema_adapt_laws})$ εγγυώνται πως 1) όλα τα σήματα κλειστού βρόγχου θα παραμένουν φραγμένα $\forall t\geq 0$ και 2) τα σφάλματα καταστάσεων $e_i^{(j)}(t)$ για $i=1,\dots,m$ και $j = 1,\dots,n_i$ θα συγκλίνουν στα σύνολα:
+Έστω ένα σύστημα ΠΕΠΕ που περιγράφεται από τις εξισώσεις $(\ref{eq:mimo_nonlinear})$ και ικανοποιεί τις υποθέσεις της παραγράφου $\ref{assumptions}$. Για αυτό το σύστημα, η είσοδος ελέγχου της εξίσωσης $(\ref{eq:schema_control_input})$ και οι νόμοι προσαρμογής της εξίσωσης $(\ref{eq:schema_adapt_laws})$ εγγυώνται πως 1) όλα τα σήματα κλειστού βρόγχου θα παραμένουν φραγμένα $\forall t\geq 0$ και 2) τα σφάλματα καταστάσεων $e_i^{(j)}(t)$ για $i=1,\dots,m$ και $j = 0,\dots,n_i-1$ θα συγκλίνουν στα σύνολα:
 \begin{equation}
-E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
+\bar{E}_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
+| e_i^{(j)}(t) | \leq
 \frac{ 2^{j-1} \lim\limits_{t \rightarrow \infty}\rho(t)}{\lambda^{n_i - j}} \right\}
+\label{eq:final_state_error_sets}
 \end{equation}
 
 \begin{proof}
@@ -320,10 +414,10 @@ E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
 	\begin{split}
 	V(x,t) = \frac{\xi^T(t) G^{-1}(x) \xi(t)}{2} 
 		   % phi
-		   &+ \frac{1}{2} \sum_{i=1}^{m} \beta_{\varphi_i} 
+		   &+ \frac{1}{2} \sum_{i=1}^{m} \frac{1}{\beta_{\varphi_i} }
 		   \tilde{w}_{\varphi_i}^{T} \tilde{w}_{\varphi_i} \\
 		   % gamma
-		   &+ \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} \beta_{\gamma_{ij}}
+		   &+ \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{m} \frac{1}{\beta_{\gamma_{ij}}}
 		   \tilde{w}_{\varphi_{\gamma_{ij}}}^{T} \tilde{w}_{\varphi_{\gamma_{ij}}}
 	\end{split}
 	\label{eq:scheme_lyap}
@@ -338,16 +432,16 @@ E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
 		     \frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} 
 		     \frac{\partial }{\partial t} x_i^{(j)} \\
 	% phi
-	& - \sum_{i=1}^{m} \beta_{\varphi_i} 
+	& - \sum_{i=1}^{m} \frac{1}{\beta_{\varphi_i} }
 	\tilde{w}_{\varphi_i}^{T} \dot{\hat{w}}_{\varphi_i} \\
 	% gamma
-	& - \sum_{i=1}^{m} \sum_{j=1}^{m} \beta_{\gamma_{ij}}
+	& - \sum_{i=1}^{m} \sum_{j=1}^{m} \frac{1}{\beta_{\gamma_{ij}}}
 	\tilde{w}_{\varphi_{\gamma_{ij}}}^{T} \dot{\hat{w}}_{\varphi_{\gamma_{ij}}}
 \end{split}
-\label{eq:scheme_lyap}
+\label{eq:scheme_lyap_derivative}
 \end{equation}
 
-Καθώς υποθέτουμε συστήματα \emph{Euler-Lagrange}, επεκτείνοντας την υπόθεση 2 για τις μερικές παραγώγους της $G^{-1}(x)$ ( εξίσωση $(\ref{eq:assump_2})$ προκύπτει:
+Καθώς υποθέτουμε συστήματα \emph{Euler-Lagrange}, επεκτείνοντας την υπόθεση 2 για τις μερικές παραγώγους της $G^{-1}(x)$ ( εξίσωση $(\ref{eq:assump_2})$ ) προκύπτει:
 \begin{equation*}
 	\sum_{i=1}^{m} \sum_{j=0}^{n_i - 1} 
 	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} 
@@ -367,24 +461,265 @@ E_{i,j} = \left\{ e_i^{(j)} \in \mathbb{R} :
 	&+ \sum_{i=1}^{m} \sum_{j=0}^{n_i - 2} 
 	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} x_i^{(j +1)}\\
 	% phi
-	& - \sum_{i=1}^{m} \beta_{\varphi_i} 
+	& - \sum_{i=1}^{m} \frac{1}{\beta_{\varphi_i} }
 	\tilde{w}_{\varphi_i}^{T} \dot{\hat{w}}_{\varphi_i} 
 	% gamma
-	- \sum_{i=1}^{m} \sum_{j=1}^{m} \beta_{\gamma_{ij}}
+	- \sum_{i=1}^{m} \sum_{j=1}^{m} \frac{1}{\beta_{\gamma_{ij}}}
 	\tilde{w}_{\varphi_{\gamma_{ij}}}^{T} \dot{\hat{w}}_{\varphi_{\gamma_{ij}}}
 	\end{split}
-	%\label{eq:scheme_lyap}
+	\label{eq:scheme_lyap_derivative_2}
 \end{equation}
 
 Συνεχίζοντας με την ανάλυση του πρώτου όρου, αντικαθιστούμε την είσοδο ελέγχου $u(t)$ από την εξίσωση $(\ref{eq:schema_control_input})$:
 \begin{equation*}
 \begin{split}
-	\dot{V}_1(x) & := \frac{\xi^T(t)} {\rho(t)} G^{-1}(x) \Big( F(x) + G(x)u(t) + d(t) - \xi(t)\dot{\rho}(t) \Big)  \\
+	\dot{V}_1(x) :&= \frac{\xi^T(t)} {\rho(t)} G^{-1}(x) \Big( F(x) + G(x)u(t) + d(t) - \xi(t)\dot{\rho}(t) \Big)  \\
 	 &=\frac{\xi^T(t)} {\rho(t)} \Big( \Phi(x) + u(t) 
 	+  \Gamma(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big)  \Big) \\
-	 &=\frac{\xi^T(t)} {\rho(t)} \Big( T(\xi(t)) + \tilde{\Phi}(x)  
-	 +  \tilde{\Gamma}(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big)  \Big)
+	 &=\frac{\xi^T(t)} {\rho(t)} \Big( -k T(\xi(t)) + \tilde{\Phi}(x) + \tilde{\Gamma}(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big)  \Big)
 \end{split}
 \end{equation*}
 
+Για το σφάλμα προσέγγισης $\tilde{\Phi}(x)$, έχουμε:
+\begin{equation}
+\begin{split}
+	\xi^T(t) \tilde{\Phi}(x) &= 
+	\begin{bmatrix}
+	\xi_1(t) & \dots & \xi_m(t)
+	\end{bmatrix}^T \cdot 
+	\left(
+	\begin{bmatrix}
+	\tilde{w}_{\varphi_1}^{T} Z_{\varPhi}(x) \\
+	\vdots \\
+	\tilde{w}_{\varphi_m}^{T} Z_{\varPhi}(x) 
+	\end{bmatrix}
+	+ \epsilon_{\varphi}(x)
+	\right) \\
+	&= \sum_{i=1}^{m} \xi_i(t) \tilde{w}_{\varphi_i}^{T} Z_{\varPhi}(x) 
+	  + \xi^T(t) \epsilon_{\varphi}(x)
+\end{split}
+\label{eq:phi_tilde_expand}
+\end{equation}
+
+Ομοίως για το σφάλμα $\tilde{\Gamma}(x)$, προκύπτει:
+\begin{equation}
+\begin{split}
+	\xi^T(t) \tilde{\Gamma}(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big) 
+	&= \sum_{i=1}^{m} \sum_{j=1}^{m}
+	\xi_i(t) \big( d_j(t) - \xi_j(t)\dot{\rho}(t) \big)  \tilde{w}_{\varphi_{\gamma_{ij}}}^{T} Z_{\Gamma}(x) \\
+	&+\xi^T(t) \epsilon_{\Gamma}(x)  \big( d_j(t) - \xi_j(t)\dot{\rho}(t) \big)
+\end{split}
+\label{eq:gamma_tilde_expand}
+\end{equation}
+
+Για το επόμενο βήμα,  αρχικά αντικαθιστώνται τα σφάλματα προσέγγισης των εξισώσεων $(\ref{eq:phi_tilde_expand})$ και $(\ref{eq:gamma_tilde_expand})$ στην παράγωγο της συνάρτησης Lyapunov ( εξίσωση $(\ref{eq:scheme_lyap_derivative_2})$ ). Στην συνέχεια αντικαθιστώνται οι νόμοι προσαρμογής της εξίσωσης $(\ref{eq:schema_adapt_laws})$ με αποτέλεσμα την απλοποίηση της εξίσωσης ως εξής:
+\begin{equation}
+\begin{split}
+\dot{V}(x,t) &= 
+\frac{\xi^T(t)} {\rho(t)} \Big( -k T(\xi(t)) + \epsilon_{\varphi}(x)  
++  \epsilon_{\Gamma}(x) \big( d(t) - \xi(t)\dot{\rho}(t) \big)  \Big) \\ 
+&+ \sum_{i=1}^{m} \sum_{j=0}^{n_i - 2} 
+\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} x_i^{(j +1)}\\
+\end{split}
+\label{eq:scheme_lyap_derivative_3}
+\end{equation}
+
+Σε αυτό το σημείο, είμαστε σε θέση να μελετήσουμε την χρονική εξέλιξη της δυναμικής του συστήματος κλειστού βρόγχου ως προς τον χρόνο. Αρχικά, η δυναμική κλειστού βρόγχου κάθε υποσυστήματος περιγράφεται από τις διαφορικές εξισώσεις:
+\begin{equation}
+\Sigma_i \left\{ 
+\begin{split}
+	\dot{e}_i^{j}  &= {e}_i^{j+1}, \quad j = 1,\dots,n_i-1\\
+	e_i^{(n_i)}    &= f_i(e - x_d) -\nu_i(t) + \sum_{j=1}^{m} g_{ij}(e - x_d) u_j(t) \\
+	\dot{\xi}_i(t) &= \frac{f_i(e - x_d) + \sum_{j=1}^{m} g_{ij}(e - x_d) u_j(t) + d_i(t) - \xi_{i}(t) \dot{\rho}(t) }
+	{\rho(t)} 
+\end{split}
+\right.
+\end{equation}
+
+Ορίζοντας το διάνυσμα $\Xi(t) := \begin{bmatrix}e^T & \xi^T \end{bmatrix}^T$, η δυναμική κλειστού βρόγχου του συνολικού συστήματος γράφεται ως:
+\begin{equation}
+	\dot{\Xi} = H(t, \Xi )
+	\label{eq:closed_loop_dynamics}
+\end{equation}
+και είναι συνεχής ως προς τον χρόνο $t$ και το διάνυσμα $\Xi$. Επιπλέον, ορίζουμε το σύνολο $\mathcal{X}_0$ ως:
+\begin{equation}
+	%\Omega = \bigcup\limits_{i=1}^{m} \bigcup\limits_{j=0}^{n_i-1} E_{i,j} \times (-1,1)^m
+	\mathcal{X}_0 = \mathbb{R}^n \times (-1,1)^m
+	\label{eq:initial_solution_set}
+\end{equation}
+Αρχικά, γνωρίζουμε από τον ορισμό του προβλήματος τις τιμές των $x(0)$ και $x_d(0)$. Συνεπώς, καθώς η σταθερά  $| \rho(0) |$ επιλέγεται κατά την σχεδίαση του ελεγκτή, μπορούμε να την επιλέξουμε με τέτοιο τρόπο ώστε:
+\begin{equation*}
+	\xi_i(0) \in (-1,1), \quad i=1,\dots,m
+\end{equation*}
+Συνεπώς, την χρονική στιγμή $t=0$, το διάνυσμα $\Xi(0)$ ανήκει στο σύνολο $\mathcal{X}_0$. Εάν επικαλεστούμε το Θεώρημα (sontag maximal solution) του παραρτήματος για το δυναμικό σύστημα $(\ref{eq:closed_loop_dynamics})$, προκύπτει πως θα υπάρχει μια μέγιστη (ή μη-επεκτάσιμη) λύση στο χρονικό διάστημα $[0,\tau_{max})$ η οποία είναι μοναδική και ανήκει εξ ολοκλήρου στο σύνολο $\mathcal{X}_0, \: \: \forall t \in [0, \tau_{max})$.
+
+Στο χρονικό διάστημα αυτό, αφού τα κανονικοποιημένα σφάλματα $| \xi_i(t) | < 1$, επαληθεύεται η εξίσωση $(\ref{eq:control_objective})$ με αποτέλεσμα τα σφάλματα $e_i^{(j)}(t)$ να είναι φραγμένα στα σύνολα $E_{i,j} \: \forall t \in [0, \tau_{max})$. Κατά συνέπεια, και οι καταστάσεις του συστήματος $x_i^{(j)}(t)$ είναι επίσης φραγμένες, αφού ισχύει:
+\begin{equation*}
+	x_i^{(j)}(t) = e_i^{(j)}(t) + x_{di}^{(j)}(t), 
+	\quad i= 1,\dots,m , \: j = 0,\dots, n_i - 1
+\end{equation*}
+και η τροχιά $x_d(t)$ είναι φραγμένη εξ υποθέσεως.
+
+Με βάση τα παραπάνω, η τροχιά $x(t)$ θα είναι φραγμένη σε ένα κλειστό σύνολο $\mathcal{X}$ η μορφή του οποίου εξαρτάται από το σύνολο $\mathcal{X}_d$ στο οποίο ανήκει η τροχιά αναφοράς και από τα σύνολα $E_{i,j}$ στα οποία ανήκουν τα σφάλματα παρακολούθησης. Εφαρμόζοντας το Θεώρημα μέγιστης - ελάχιστης τιμής, συμπεραίνουμε πως οι συνεχείς συναρτήσεις $\epsilon_{\varphi_i}(x)$, $\epsilon_{\gamma_{ij}}(x)$ και $d_i(x)$ θα έχουν ένα άγνωστο άνω φράγμα 
+σε αυτό το σύνολο $\mathcal{X}$.
+
+Στην συνέχεια, ορίζουμε ως $\pi(t)$ το διάνυσμα:
+\begin{equation}
+	\pi(t) := \epsilon_{\varphi}(x(t) )  
+	+  \epsilon_{\Gamma}(x(t)) \big( d(t) - \xi(t)\dot{\rho}(t) \big)
+	\in \mathbb{R}^m
+	\label{eq:pi_definition}
+\end{equation}
+Εφόσον, οι συναρτήσεις $\rho(t)$ και $\dot{\rho}(t)$ είναι φραγμένες εκ κατασκευής και οι υπόλοιποι όροι του $\pi(t)$ είναι φραγμένοι, έτσι και το μέτρο του διανύσματος $\pi(t)$ θα έχει ένα άνω φράγμα $\bar{\pi}$ στο διάστημα $[0, \tau_{max})$.
+%\begin{equation}
+%\begin{split}
+%	&\pi(t) := \epsilon_{\varphi}(x(t) )  
+%	+  \epsilon_{\Gamma}(x(t)) \big( d(t) - \xi(t)\dot{\rho}(t) \big)
+%	\in \mathbb{R}^m  \\
+%	\| &\pi(t) \| \leq \bar{\pi}, \quad \forall t \in [0,\tau_{max})
+%\end{split}
+%\label{eq:pi_bound}
+%\end{equation}
+
+Ορίζουμε το βαθμωτό όρο $\delta(t)$ ως:
+\begin{equation}
+	\delta(t) := \sum_{i=1}^{m} \sum_{j=0}^{n_i - 2} 
+	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} x_i^{(j +1)} \in \mathbb{R}
+	\label{eq:delta_definition}
+\end{equation}
+Εξ υποθέσεως η $G(x)$, συνεπώς και η $G^{-1}(x)$ είναι Lipschitz συνεχής στο $\mathcal{X}$, συνεπώς οι μερικοί παράγωγοι της παραπάνω σχέσης θα είναι φραγμένοι σε αυτό το $\mathcal{X}$. Έτσι συμπεραίνουμε πως ο όρος $\delta(t)$ έχει ένα άγνωστο άνω φράγμα $\bar{\delta}$ στο $[0,\tau_{max})$.
+%\begin{equation}
+%\begin{split}
+%	&\delta(t) := \sum_{i=1}^{m} \sum_{j=0}^{n_i - 2} 
+%	\frac{\partial G^{-1}(x) }{\partial x_i^{(j)}} x_i^{(j +1)} \in \mathbb{R} \\
+%	| &\delta(t) | \leq \bar{\delta},
+%	\quad \forall t \in [0,\tau_{max})
+%\end{split}
+%\label{eq:delta_bound}
+%\end{equation}
+
+Αντικαθιστώντας τις σχέσεις $(\ref{eq:pi_definition})$ και $(\ref{eq:delta_definition})$ στην παράγωγο της συνάρτησης Lyapunov (εξίσωση  (\ref{eq:scheme_lyap_derivative_3})) έχουμε:
+\begin{equation}
+\begin{split}
+	\dot{V}(x,t) &= 
+	-k \frac{\xi^T(t)} {\rho(t)} \left( T(\xi(t)) + \pi(t) \right)  
+	+ \delta(t) \\
+	&\leq -k \frac{\xi^T(t)} {\rho(t)} T(\xi(t)) 
+	+ \| \xi(t) \| \cdot \| \pi(t) \| + | \delta(t) |\\
+	&\leq  -k \frac{\xi^T(t)} {\rho(t)} T(\xi(t)) 
+	+ \| \xi(t) \| \bar{\pi} + \bar{\delta}
+	\end{split}
+\end{equation}
+Τέλος, αφού στο διάστημα $[0, \tau_{max} )$ τα $\xi_i(t)$ είναι φραγμένα στο διάστημα $(-1,1)$, το μέτρο του διανύσματος $\| \xi(t) \|$ είναι μικρότερο του $\sqrt{m}$, και έτσι καταλήγουμε στην ανίσωση:
+
+\begin{equation*}
+	\dot{V}(x,t) \leq  - \frac{k} {\rho(t)} 
+	\sum_{i=1}^{m} \xi_i(t) \ln \left( \frac{1 + \xi_i(t)}{1 - \xi_i(t)} \right) 
+	+ \sqrt{m} \bar{\pi} + \bar{\delta}
+	\label{eq:schema_lyap_derivative_final}
+\end{equation*}
+
+Καθώς όλοι οι όροι του αθροίσματος $\xi_i(t) T(\xi_i(t)) $ είναι μεγαλύτεροι ή ίσοι του μηδενός, από την εξίσωση $(\ref{eq:schema_lyap_derivative_final})$ βγαίνει το συμπέρασμα:
+\begin{equation*}
+	\exists \bar{\xi}_{i} \in (0,1) : | \xi_i(t) | > \bar{\xi}_{i}
+	\implies \dot{V} < 0, \quad i = 1,\dots,m  
+	\: \forall t \in [0, \tau_{max})
+\end{equation*}
+
+Συνεπώς, έχουμε δείξει πως το σύστημα εξισώσεων $(\ref{eq:closed_loop_dynamics})$, για $t = 0$ ανήκει στο σύνολο $\mathcal{X}_0$ της εξίσωσης  $(\ref{eq:initial_solution_set})$, και για $\forall t \in [0, \tau_{max} )$ παραμένει φραγμένο εντός του συνόλου:
+\begin{equation*}
+	\mathcal{X}_f = \bigtimes\limits_{i=1}^{m} \left( \bigtimes\limits_{j=0}^{n_i-1} E_{i,j} \right) \times (-\bar{\xi}_i ,\bar{\xi}_i)
+\end{equation*}
+το οποίο είναι υποσύνολο του $\mathcal{X}_0$. Έτσι, χρησιμοποιώντας το πόρισμα (sontag maximal contradiction), συμπεραίνουμε πως το $\tau_{max}$ μπορεί να επεκταθεί στο $\infty$.
+
+Με αυτόν τον τρόπο αποδεικνύεται ότι τα κανονικοποιημένα σφάλματα $\xi_i(t)$ παραμένουν φραγμένα στο σύνολο $(-1,1) \: \: \forall t \geq 0$, εξασφαλίζοντας έτσι πως τα σφάλματα $e_{i,j}$ συγκλίνουν στα σύνολα $\bar{E}_{i,j}$, διασφαλίζοντας το πρόβλημα παρακολούθησης της τροχιάς $x_d(t)$ για το σύστημα $\ref{eq:mimo_nonlinear}$.
 \end{proof}
+
+\pagebreak
+
+Μέχρι στιγμής, το μόνο που έχει αποδειχθεί είναι η ικανότητα του προτεινόμενου σχήματος να λύνει το πρόβλημα παρακολούθησης τροχιάς για το σύστημα $\ref{eq:mimo_nonlinear}$, χωρίς να έχει γίνει κάποια αναφορά στην σύγκλιση των παραμετρικών σφαλμάτων $\tilde{w}_{\varphi_i}(t)$ και $\tilde{w}_{\gamma_{ij}}(t)$.
+
+\subsection{Παραμετροποίηση του Συστήματος Αναφοράς}
+\label{subsec:schema_ref_parameterization}
+Για την επιτυχία της αναγνώρισης των συναρτήσεων $\Phi(x)$ και $\Gamma(x)$, πρέπει να σχεδιαστεί μια τροχιά $x_d(t)$ η οποία ικανοποιεί τις υποθέσεις της υποπαραγράφου $(\ref{subsec:schema_ref})$, και ταυτόχρονα ικανοποιεί την συνθήκη επιμένουσας διέγερσης για το μοντέλο προσέγγισης που έχουμε επιλέξει.
+
+Προς αυτή την κατεύθυνση, χρησιμοποιείται η θεωρία που αναπτύχθηκε στην παράγραφο $\ref{sec:ref_system}$, για τον σχεδιασμό των υποσυστημάτων αναφοράς $\Sigma_i$. Σύμφωνα με την παράγραφο $\ref{sec:ref_system}$ λοιπόν, η είσοδος $\nu_i(t)$ κάθε υποσυστήματος επιλέγεται ως:
+\begin{equation}
+	\nu_i(t) = \sum_{k=n_i + 1}^{2(n_i + 1)} \prod_{l = 1}^{n_i} (k-l) \alpha_k t^{k - n_i - 1}
+	%,\quad \forall t \in [t_0,t_0+\Delta T]
+\end{equation}
+Κατά την διάρκεια της κλειστής περιοδικής τροχιάς, είναι επιθυμητό η τροχιά αναφοράς $x_d(t)$ να επισκέπτεται όλα τα κέντρα των διανυσμάτων οπισθοδρομητών $Z_{\Phi}(x)$ και $Z_{\Gamma}(x)$. 
+
+Λύνοντας την εξίσωση $(\ref{eq:ref_system_inv_solution})$ της παραγράφου $\ref{sec:ref_system}$, μπορούμε κάθε φορά να παραμετροποιήσουμε τις εισόδους αναφοράς $\nu_i(t)$, έτσι ώστε η τροχιά $x_d(t)$ να υλοποιεί μια επιθυμητή μετάβαση $c_i \rightarrow c_j$ ( όπου $c_i$ και $c_j$ κέντρα του νευρωνικού δικτύου) μέσα σε έναν επιθυμητό χρόνο $\Delta T$. Έτσι η κλειστή περιοδική τροχιά σχηματίζεται ως μια σειρά μεταβάσεων, που τελικά διέρχεται από όλα τα κέντρα των νευρωνικών δικτύων.
+
+Τέλος, σημειώνεται πως με κατάλληλη επιλογή των συνοριακών συνθηκών $x_{di}^{(n_i)}(t)$ και $x_{di}^{(n_i)}(t+ \Delta T)$, μπορεί κανείς να εγγυηθεί την συνέχεια των εισόδων αναφοράς $\nu_i(t)$, το οποίο είναι απαραίτητη προϋπόθεση για να ισχύει η μαθηματική ανάλυση του σχήματος.
+
+\subsection{Επιμένουσα Διέγερση}
+Έχοντας σχεδιάσει μια κλειστή περιοδική τροχιά $x_d(t)$ που διέρχεται από όλα τα κέντρα, μένει να δείξουμε πως με κατάλληλη επιλογή των κερδών του ελεγκτή, μπορούμε να εγγυηθούμε ικανοποίηση της ΣΕΔ για το προτεινόμενο σχήμα αναγνώρισης.
+
+\textbf{Πρόταση(Αναγνώριση Δυναμικής):}
+Έστω το σύστημα $\ref{eq:mimo_nonlinear}$ υπό τις υποθέσεις της παραγράφου $\ref{assumptions}$, με την είσοδο αναφοράς της εξίσωσης $(\ref{eq:schema_control_input})$, τους νόμους προσαρμογής της εξίσωσης $(\ref{eq:schema_adapt_laws})$ και το σύστημα αναφοράς της παραγράφου $\ref{subsec:schema_ref_parameterization}$. Για το σύστημα αυτό, εάν επιλεχθεί το κέρδος $\lambda$ και η συνάρτηση επίδοσης $\rho(t)$ έτσι ώστε:
+\begin{equation}
+	\frac{ 2^{j-1} \lim\limits_{t \rightarrow \infty}\rho(t)}{\lambda^{n_i - j}} < \frac{1}{2} \min_{i \neq j} \{\| c_i - c_j \| \},
+	\quad i=1,\dots,m, \quad j = 0,\dots,n_i-1
+	\label{eq:PE_hypothesis}
+\end{equation}
+τότε τα βάρη $\hat{w}_{\varphi_i}(t)$ και $\hat{w}_{\gamma_{ij}}(t)$ των προσεγγίσεων $\hat{\Phi}(x)$ και $\hat{\Gamma}(x)$ θα συγκλίνουν σε μια περιοχή των βέλτιστων τιμών τους.
+
+\begin{proof}
+	
+Έστω $\bar{\epsilon}$ το μέγιστο σφάλμα μόνιμης κατάστασης της τροχιάς $x(t)$, από την εξίσωση $(\ref{eq:final_state_error_sets})$:
+\begin{equation}
+	\bar{\epsilon} = \max_{i,j} \left\{ \frac{ 2^{j-1} \lim\limits_{t \rightarrow \infty}\rho(t)}{\lambda^{n_i - j}} \right\}
+\end{equation}
+
+Τότε, θα υπάρχει ένα $T_0$ για το οποίο η τροχιά $x(t)$ θα ανήκει στο σύνολο:
+\begin{equation}
+	B_t(x_d(t),\bar{\epsilon} ) = 
+	\left\{ x \in\mathbb{R}^n : \| x(t) - x_d(t) \| \leq \bar{\epsilon} \right\},
+	\quad t \geq T_0
+\end{equation}
+Στην συνέχεια ορίζουμε τα σφαιρικά σύνολα $B_i$ γύρω από τα κέντρα των νευρωνικών δικτύων $c_i$ ως εξής:
+\begin{equation}
+B_i(c_i,\bar{\epsilon} ) = 
+\left\{ x \in\mathbb{R}^n : \| x(t) - c_i \| \leq \bar{\epsilon} \right\}
+\label{eq:center_neighborhoods}
+\end{equation}
+Εφόσον ισχύει η εξίσωση $(\ref{eq:PE_hypothesis})$, τα σύνολα $B_i$ της εξίσωσης $(\ref{eq:center_neighborhoods})$ δεν επικαλύπτονται μεταξύ τους. Συνεπώς, αφού η τροχιά $x_d(t)$ είναι ομαλή και περιοδική με περίοδο $T$, και καθώς έχουμε αποδείξει στην παράγραφο $\ref{subsec:schema_ref_parameterization}$ πως διέρχεται από όλα τα κέντρα, δηλαδή:
+\begin{equation*}
+	\exists t_i : x_d(t_i + mT) = c_i, \quad m \in \mathbb{N} 
+\end{equation*}
+για κάθε κέντρο $c_i$, τότε θα υπάρχει μια θετική σταθερά $\delta t$ έτσι ώστε:
+\begin{equation*}
+	B_t(x_d(t),\bar{\epsilon} ) \subset B_i(c_i,\bar{\epsilon} ), 
+	\quad \forall t \in \left[t_i + mT - \frac{\delta t}{2}, t_i + mT + \frac{\delta t}{2} \right] \cap [T_0, \infty)
+\end{equation*}
+δηλαδή ένα χρονικό διάστημα $\delta t$ για το οποίο η τροχιά $x(t)$ βρίσκεται στην $\bar{\epsilon}$-γειτονία του κέντρου $c_i$, σε κάθε περίοδο. Συνεπώς, η τροχιά $x(t)$ ικανοποιεί το θεώρημα (todo:label), και κατ' επέκταση την συνθήκη επιμένουσας διέγερσης του ορισμού (πάλι, todo).
+
+Έστω το σύστημα διαφορικών εξισώσεων:
+%\begin{gather*}
+%\begin{bmatrix} \dot{\xi(t)}  \\ \dot{\tilde{W}}_{fg} \\ \dot{\tilde{W}}_{g} \end{bmatrix}
+%=
+%\begin{bmatrix}
+%\frac{-k}{g(x)\rho(t)} ln\bigg( \frac{\xi + 1}{\xi - 1} \bigg)
+%&  \frac{1}{g(x)\rho(t)} Z_{fg}^T(x) 
+%& \frac{\dot{V}(t) - \xi(t) \dot{\rho}(t)}{g(x)\rho(t)} Z_{fg}^T(x) \\
+%%
+%- \frac{\gamma_{fg}}{\rho(t)} Z_{fg}(x) &  \gamma_{fg} \sigma_{fg} & 0 \\
+%- \frac{\gamma_{g} (\dot{V}(t) - \xi(t) \dot{\rho}(t)) }{\rho(t)} Z_{g}(x)
+%& 0 & \gamma_{g} \sigma_{g}
+%\end{bmatrix}
+%\begin{bmatrix} \xi(t)  \\ \tilde{W}_{fg}  \\ \tilde{W}_{g} \end{bmatrix}
+%+\begin{bmatrix} 
+%\text{errors}
+%%\epsilon_{fg}(x)
+%%+ \epsilon_{g}(x)(\dot{V}(t) - \xi(t) \dot{\rho}(t))
+%\\ 0  \\ 0 \end{bmatrix}
+%\end{gather*}
+
+\end{proof}
+
+
+
+
+\section{Παρατηρήσεις}
