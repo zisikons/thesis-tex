@@ -1,3 +1,5 @@
+% !TeX document-id = {5197a7b8-f93e-4321-9063-fe70b38068a3}
+% !TeX TXS-program:compile = txs:///xelatex/[--shell-escape]
 \def \digital{1}
 \if 1\digital
 	\documentclass[12pt]{report}
@@ -10,13 +12,32 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{mathabx}
+\usepackage{physics}
 
 \usepackage{xltxtra}
 \usepackage{xgreek}
 	\nogreekalph
 
+%\usepackage{amsthm}
+%\renewenvironment{proof}{{\bfseries Απόδειξη}}{\qed}
+%\renewenvironment{theorem}{{\bfseries Θεώρημα}}{\qed}
+%\renewenvironment{lemma}{{\bfseries Λήμμα}}{\qed}
+
+% Theorems
 \usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{lemma}{Λήμμα}
+\newtheorem{theorem}{Θεώρημα}
+\newtheorem{remark}{Παρατήρηση}
+\newtheorem{assumption}{{\bfseries Υπόθεση}}
+\newtheorem{definition}{Ορισμός}
+\newtheorem{proposition}{Πρόταση}
+
 \renewenvironment{proof}{{\bfseries Απόδειξη}}{\qed}
+\renewenvironment{theorem}{{\bfseries Θεώρημα}}{}
+\renewenvironment{lemma}{{\bfseries Λήμμα}}{}
+%\renewenvironment{assumption}{{\bfseries Υπόθεση}}{}
+
 
 %\usepackage{newtxmath}
 \setmainfont{Times New Roman}
@@ -75,8 +96,17 @@
 \newcommand{\barbelow}[1]{\underaccent{\bar}{#1}}
 
 \usepackage{wrapfig}
-
 \usepackage{cite}
+
+% Si units for healty tables
+\usepackage{siunitx}
+\sisetup
+{
+	math-rm=\mathsf,
+	round-mode=places,
+	round-precision=4
+}
+
 
 \newcommand{\blankpage}{
 	\newpage
@@ -88,7 +118,8 @@
 % hyphenation commands
 \hyphenation{method-ology}
 \hyphenation{comp-uter}
-
+\hyphenation{ά-γνωστες}
+%\hyphenation{άγνω-στες}
 %\newcommand\xequal{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 
 
@@ -224,7 +255,8 @@
 \pagenumbering{arabic}
 \include{chapters/introduction}
 \include{chapters/mathematicalTools}
-\include{chapters/schemePresentation}
+\include{chapters/schemePresentationAlternative}
+\include{chapters/experiments}
 %\include{chapters/introduction}
 
 

@@ -8,6 +8,7 @@
 %Artificial neural networks (ANNs) or connectionist systems are computing systems vaguely inspired by the biological neural networks that constitute animal brains.[1] Such systems "learn" (i.e. progressively improve performance on) tasks by considering examples, generally without task-specific programming. For example, in image recognition, they might learn to identify images that contain cats by analyzing example images that have been manually labeled as "cat" or "no cat" and using the results to identify cats in other images. They do this without any a priori knowledge about cats, e.g., that they have fur, tails, whiskers and cat-like faces. Instead, they evolve their own set of relevant characteristics from the learning material that they process.
 
 \section{Νευρωνικά Δίκτυα RBF}
+\label{sec:rbf_networks}
 Με τον όρο \textit{Tεχνητά Νευρωνικά Δίκτυα} (Artificial Neural Networks) αναφερόμαστε σε μια κατηγορία μαθηματικών μοντέλων τα οποία προέκυψαν την δεκαετία του 1940 και είναι εμπνευσμένα από τα βιολογικά νευρωνικά δίκτυα τα οποία απαντώνται στους εγκεφάλους των ανθρώπων και των ζώων. Το κύριο χαρακτηριστικό των νευρωνικών δικτύων είναι η εγγενής ικανότητα μάθησης. Ως μάθηση μπορεί να οριστεί η σταδιακή βελτίωση της ικανότητας του δικτύου να επιλύει κάποιο πρόβλημα (π.χ. η σταδιακή προσέγγιση μίας συνάρτησης). Η μάθηση επιτυγχάνεται μέσω της εκπαίδευσης, μίας επαναληπτικής διαδικασίας σταδιακής προσαρμογής των παραμέτρων του δικτύου σε τιμές κατάλληλες ώστε να επιλύεται με επαρκή επιτυχία το προς εξέταση πρόβλημα.
 
 
@@ -467,7 +468,7 @@ y &= h(x)
 }
 
 %\textbf{Απόδειξη}\\
-\begin{proof}\\
+\begin{proof}
 Καθώς τα $\varepsilon_i(t), \: i = 1,\dots ,p$ είναι φραγμένα, τότε θα υπάρχουν τα κάτω φράγματα $\barbelow{\varepsilon}_i$ και τα άνω φράγματα  $\overline{\varepsilon}_i$ για κάθε $i$. Αντικαθιστώντας το $\varepsilon_i(t)$ από την εξίσωση $(\ref{eq:ppc_trasformation_error})$, θα ισχύει η παρακάτω ανίσωση:
 \begin{equation*}
 	\barbelow{\varepsilon}_i \leq T_i \left( \frac{e_i(t)}{\rho_i(t)} \right) \leq \overline{\varepsilon}_i

@@ -1,0 +1,724 @@
+\chapter{Πειραματικά Αποτελέσματα}
+Σε αυτό το κεφάλαιο παρουσιάζονται κάποια πειράματα αναγνώρισης που πραγματοποιήθηκαν με σκοπό, τόσο να αποδείξουν την εγκυρότητα της μεθόδου, αλλά και να αποκαλύψουν τις αδυναμίες και τους πιθανούς κινδύνους που κρύβει η εφαρμογή της. Σε όλα τα πειράματα, ακολουθείται η διαδικασία σχεδίασης που αναπτύχθηκε στο Κεφάλαιο \ref{chap:scheme_presentation}. Τέλος, στην παράγραφο 666 παρουσιάζουμε κάποια συμπεράσματα για την απόδοση και τις αδυναμίες της μεθόδου.
+
+%Στα πλαίσια αυτού του κεφαλαίου λοιπόν, αρχικά θα παρουσιαστούν κάποια απλά παραδείγματα με σκοπό την εφαρμογή της εγκυρότητας μεθόδου. Στην συνέχεια θα παρουσιαστούν κάποιες εφαρμογές σε πραγματικά συστήματα.
+
+
+\section{Αναγνώριση αθροισμάτων γκαουσιανών}
+Σκοπός αυτής της ενότητας είναι ο σχεδιασμός κάποιον απλών πειραμάτων με σκοπό την επαλήθευση της εγκυρότητας της μεθόδου. Προς τον σκοπό αυτό, επιλέγονται συστήματα των οποίων οι μη γραμμικότητες δίνονται από αθροίσματα γκαουσιανών συναρτήσεων RBF, και κατά συνέπεια είναι εφικτή η ακριβής προσέγγιση τους από νευρωνικά δίκτυα RBF της μορφής της Παραγράφου \ref{sec:rbf_networks}. Στην παρούσα παράγραφο παρουσιάζονται δυο πειράματα, ένα για συστήματα μιας εισόδου μιας εξόδου (ΜΕΜΕ), και ένα για συστήματα πολλαπλών εισόδων, πολλαπλών εξόδων (ΠΕΠΕ).
+\subsection{Συστήματα ΜΕΜΕ}
+\label{subsec:rbf_siso}
+Έστω το δευτεροβάθμιο μη γραμμικό σύστημα που περιγράφεται από τις εξισώσεις:
+\begin{equation*}
+\begin{split}
+\dot{x}_1 &= x_2 \\
+\dot{x_2} &= f(x) + g(x) u(t)
+\end{split}
+\end{equation*}
+όπου $x = \bmqty{x_1 & x_2}^T$ το διάνυσμα καταστάσεων και $f(x)$ και $g(x)$ μη γραμμικές συναρτήσεις που ορίζονται ως $f(x) = \varphi(x)/\gamma(x)$ και $g(x) = 1/\gamma(x)$ αντίστοιχα. Οι  $\varphi(x)$ και $\gamma(x)$ δίνονται ως:
+\begin{equation*}
+\begin{split}
+	\varphi(x)  &= \sum_{i = 1}^{4} w_{\phi_i}^* z_{\phi_i} (x) = W_{\varphi}^{*T} Z_\varphi(x) \\
+	\gamma(x)  &= w_{\gamma 0} + \sum_{i = 1}^{2} w_{\gamma_i}^* z_{\gamma_i} (x) = W_{\gamma}^{*T} Z_\gamma(x) \\
+	\end{split}
+\end{equation*}
+όπου $W_{\varphi}^* = [1,2,3,4]^T$ και $W_{\gamma}^* = [0.5,1,2]^T$ διανύσματα προεπιλεγμένων σταθερών, και $Z_\varphi: \mathbb{R}^2 \rightarrow \mathbb{R}^4$ και $Z_\gamma: \mathbb{R} \rightarrow \mathbb{R}^3$ διανυσματικά πεδία αποτελούμενα από RBF όρους της μορφής:
+\begin{equation*}
+	z_{\varphi_i}(x) = z_{\varphi_i}(\norm{x - c_{\varphi i}}) 
+	= \exp( -\norm{\frac{x - c_{\varphi i}}{\sigma}}^2 )
+	\label{eq:qaussian_term_phi}
+\end{equation*}
+και 
+\begin{equation*}
+z_{\gamma_i}(x) = z_{\gamma_i}(\abs{x_1 - c_{\gamma i}}) 
+= \exp( -\abs{\frac{x_1 - c_{\gamma i}}{\sigma}}^2 )
+\label{eq:qaussian_term_gamma}
+\end{equation*}
+Τα κέντρα $c_{\varphi i}, \: i = 1,\dots,4$ των RBF συναρτήσεων $z_{\varphi_i}(x)$ είναι τα σημεία $(0,0)$, $(1,0)$, $(0,1)$ και $(1,1)$ ενώ τα κέντρα $c_{\gamma i},\: i=1,2$ των RBF συναρτήσεων $z_{\gamma_i}(x)$ είναι τα $0$ και $1$. Οι διασπορές $\sigma$ επιλέγονται ίσες με $0.5$, για κάθε γκαουσιανή $z_{\phi_i}(x)$ και $z_{\gamma_i}(x)$. Τέλος σημειώνεται ότι το διάνυσμα $Z_\gamma(x)$ εκτός από RBF όρους περιέχει και έναν μοναδιαίο όρο που είναι συντελεστής της σταθεράς $w_{\gamma 0}$ και στον οποίο αναφερόμαστε ως πόλωση \textit{(bias)}.
+
+{\begin{wraptable}[15]{r}{0.3\textwidth}
+	\centering
+	\captionsetup{format=plain}
+	\caption{Κέρδη σχήματος αναγνώρισης για το πείραμα 1}
+	\label{tab:rbf_siso_params}
+	\begin{tabular}{ l | c }
+		\hline\hline
+		\text{Parameter} & Value \\ \hline\hline
+		$k$             & $10$   \\ \hline
+		$\lambda$       & $1 $   \\ \hline
+		$\beta_{\varphi} \;\text{(gaussian)}$  & $0.08$ \\ \hline
+		$\beta_{\gamma} \;\text{(bias)}$     & $0.05$ \\ \hline
+		$\beta_{\gamma} \;\text{(gaussian)}$ & $0.12$  \\ \hline
+		$\rho_0      $ & $2$  \\ \hline
+		$\rho_\infty $ & $0.01$  \\ \hline
+		$l           $ & $2$  \\ \hline
+		$\textit{ΔΤ} $  & $1$ 	\\ \hline \hline	
+	\end{tabular}
+\end{wraptable}
+
+
+\subsubsection{Σχήμα Αναγνώρισης}
+Για την αναγνώριση των άγνωστων συναρτήσεων του παραπάνω συστήματος, θα χρησιμοποιηθούν δυο νευρωνικά δίκτυα RBF με διανύσματα  οπισθοδρομητών ίδιας δομής με αυτά των $Z_\varphi$ και $Z_\gamma$. Έτσι λοιπόν, σχηματίζουμε τις προσεγγίσεις:
+\begin{equation*}
+	\begin{matrix}
+	\hat{\varphi}(x,t)  = \hat{W}_{\varphi}^T(t) Z_\varphi(x) & \text{και} & \hat{\gamma}(x,t) = \hat{W}_{\gamma}^T(t) Z_\gamma(x) 
+	\end{matrix}
+\end{equation*}
+όπου $\hat{W}_{\varphi} \in \mathbb{R}^4$ και $\hat{W}_{\gamma} \in \mathbb{R}^3$ οι ελεύθεροι παράμετροι των μοντέλων. Όπως είναι προφανές, σύγκλιση των βαρών $\hat{W}_{\varphi}$ και $\hat{W}_{\gamma}$ στα $W_{\varphi}^*$ και $W_{\gamma}^*$ συνεπάγεται σε επιτυχία του πειράματος αναγνώρισης.
+
+Για την εκτίμηση των παραμέτρων $\hat{W}_{\varphi}$ και $\hat{W}_{\gamma}$ θα ακολουθήσουμε την μεθοδολογία που αναπτύχθηκε στην παράγραφο τοδ. Ακολουθώντας τα βήματα της σχεδίασης, επιλέγουμε την είσοδο ελέγχου ως:
+
+}
+\begin{equation}
+u(t) = -k T(\xi(t)) - \hat{\Phi}(x,t) 
+- \hat{\Gamma}(x,t) \left( d(x) - \xi(t) \dot{\rho}(t) \right)
+\in \mathbb{R}
+\label{eq:siso_rbf_control_input}
+\end{equation}
+και τους νόμους προσαρμογής ως:
+\begin{equation}
+\begin{alignedat}{1}
+\dot{\hat{W}}_{\varphi}(t) &= 
+\beta_{\varphi} \frac{\xi(t)}{\rho(t)} Z_{\Phi}(x) 
+\in \mathbb{R}^{q_{\Phi}} \\
+%%%%%
+\dot{\hat{W}}_{\gamma}(t) &= \beta_{\gamma} \frac{\xi(t)}{\rho(t)}
+\big( d(x) - \xi(t) \dot{\rho}(t) \big) Z_{\Gamma}(x)
+\in \mathbb{R}^{q_{\Gamma}}
+\end{alignedat}
+\label{eq:siso_adapt_laws}
+\end{equation}
+όπου $\xi(t) = s(x)/\rho(t)$ με $s(x) = e_2(x) + \lambda e_1(x)$ όπως ορίζουν τα βήματα (1,2) και $\rho(t)$ η συνάρτηση επίδοσης. Οι παράμετροι του σχήματος ελέγχου απεικονίζονται στον πίνακα \ref{tab:rbf_siso_params}. Τέλος, το σύστημα αναφοράς που χρησιμοποιείται για την παραγωγή της τροχιάς αναφοράς $x_d(t)$ αναπτύσσεται με βάση την μεθοδολογία της παραγράφου \ref{sec:ref_system}.
+
+
+%\begin{remark}
+%	Το απλό αυτό πείραμα έχει επιλεχθεί με τέτοιο τρόπο, έτσι ώστε να είναι δυνατή η ακριβής προσέγγιση των άγνωστων συναρτήσεων $\varphi(x)$ και $\gamma(x)$ από νευρωνικά δίκτυα RBF, χωρίς να εμφανίζονται σφάλματα μοντελοποίησης. Η επαλήθευση της εγκυρότητας της διαδικασίας αναγνώρισης σε αυτή την περίπτωση είναι αρκετά εύκολη αφού αρκεί κανείς να εξακριβώσει πως τα τελικά βάρη $\hat{W}_\phi$ και $\hat{W}_\gamma$ των προσεγγίσεων RBF ταυτίζονται με αυτά των $W_{\varphi}^*$ και $W_{\gamma}^*$ που δίνονται στους παραπάνω ορισμούς.
+%\end{remark}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[scale=1]{plots/experiments/trivial_rbf/w_phi_alt.tex}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[scale=1]{plots/experiments/trivial_rbf/w_gamma_alt.tex}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{ Χρονική εξέλιξη των βαρών $\hat{W}_\varphi(t)$ (αριστερά) και $\hat{W}_\gamma(t)$ (δεξιά) συναρτήσει του χρόνου.}
+	\label{fig:siso_weights}
+\end{figure}
+
+{
+\begin{wrapfigure}{r}{0.4\textwidth}
+	%\centering
+	\input{plots/experiments/trivial_rbf/phase_plain.tex}
+	\captionsetup{format=plain}
+	\caption{Τροχιά $x(t)$ στο επίπεδο καταστάσεων $x_1 - x_2$}
+	\label{fig:phase_plain}	
+\end{wrapfigure}
+
+\subsubsection{Αποτελέσματα}
+Χρησιμοποιώντας τις παραπάνω παραμέτρους, το σύστημα κλειστού βρόγχου προσομοιώνεται για 300 περιόδους. Στο σχήμα \ref{fig:siso_weights} παρουσιάζεται η χρονική εξέλιξη των βαρών $\hat{W}_{\varphi}(t)$ και $\hat{W}_{\gamma}(t)$ ενώ στο σχήμα \ref{fig:phase_plain} απεικονίζεται η τροχιά $x(t)$ του συστήματος στο φασικό πορτραίτο $x_1$-$x_2$.
+
+Όπως φαίνεται από το σχήμα \ref{fig:siso_weights} τα βάρη των προσεγγίσεων συγκλίνουν στις τιμές των άγνωστων διανυσμάτων $W_\varphi^*$ και $W_\gamma^*$, συνεπώς το σχήμα αναγνώρισης πράγματι εκτιμά σωστά τις συναρτήσεις $\varphi(x)$ και $\gamma(x)$. Παρατηρούμε επίσης πως δεν έχουν όλα τα βάρη την ίδια ταχύτητα σύγκλισης, αφού τα βάρη $\hat{W}_{\gamma}(t)$ (δεξιά) συγκλίνουν πιο αργά από αυτά τα $\hat{W}_{\varphi}(t)$ (αριστερά).
+
+}
+%, συνεπώς απαιτείται έλεγχος κατά την λήψη της απόφασης του αν έχει 
+
+Στο σχήμα \ref{fig:phase_plain}, είναι φανερό ότι η τροχιά $x(t)$ διέρχεται από τα κέντρα $c_\Phi$ του RBF νευρωνικού δικτύου $Z_\varphi$, γεγονός που εξασφαλίζει την ικανοποίηση της Συνθήκης Επιμένουσας Διέγερσης. Παρομοίως, η ΣΕΔ επαληθεύεται και για το διάνυσμα οπισθοδρομητών $Z_\Gamma(x)$ αφού τα κέντρα $c_\gamma$ αποτελούν την προβολή των κέντρων $c_\varphi$ στον $\mathbb{R}$.
+
+Αξίζει να σημειωθεί πως σε αυτή την περίπτωση, καθώς η αρχιτεκτονική των δικτύων RBF που χρησιμοποιούνται στην αναγνώρισης ταυτίζεται με τις μη γραμμικότητες του συστήματος, το αποτέλεσμα της προσέγγισης μπορεί να επεκταθεί σε ολόκληρο τον χώρο $\mathbb{R}^2$. Αν ωστόσο μελετούσαμε ένα πραγματικό σύστημα όπου οι μη γραμμικές του συναρτήσεις δεν δίνονται από αθροίσματα γκαουσιανών, τότε η προσέγγιση είναι τοπική και ισχύει μόνο σε μια γειτονιά των κέντρων των νευρωνικών δικτύων την οποία στην απόδειξη ορίζουμε ως $\Omega_x$. Παρόλα αυτά, όπως φαίνεται από το σχήμα \ref{fig:phase_plain}, η περιοδική τροχιά $x(t)$ δεν βρίσκεται καθ' όλη την διάρκεια κοντά στα κέντρα του νευρωνικού δικτύου και κατά συνέπεια εντός αυτού του συμπαγούς συνόλου $\Omega_x$. Αυτός είναι και ο λόγος που στην απόδειξη του Κεφαλαίου \ref{chap:scheme_presentation}, διαχωρίζονται αυτά τα δυο σύνολα και μέσω υποθέσεων θεωρούμε πως ενώ οι προσεγγίσεις είναι τοπικές και ισχύουν μόνο για $x \in \Omega_x$, η τροχιά $x(t)$ είναι φραγμένη σε ένα συμπαγές σύνολο $\mathcal{X}$ το οποίο είναι υπερσύνολο του $\Omega_x$.
+
+\subsection{Συστήματα ΠΕΠΕ}
+\label{subsec:rbf_mimo}
+Επεκτείνοντας το παραπάνω αποτέλεσμα για συστήματα ΠΕΠΕ, θεωρούμε το μη γραμμικό σύστημα:
+\begin{equation*}
+\label{eq:third_order_plant}
+\begin{split}
+\dot{x}_1 &= x_{2}  \\
+\dot{x}_2 &= f_1(x) + g_{11}(x)u_1(t) + g_{12}(x)u_2(t) \\
+\dot{x}_3 &= f_2(x) + g_{21}(x)u_1(t) + g_{22}(x)u_2(t)
+\end{split}
+\end{equation*}
+όπου $x = \bmqty{x_1 & x_2 & x_3}^T$ το διάνυσμα καταστάσεων και $f_i : \mathbb{R}^3 \rightarrow \mathbb{R}$ και $g_{ij}:\mathbb{R} \rightarrow \mathbb{R}$ μη ομαλές συναρτήσεις που ικανοποιούν τις Υποθέσεις  - του Κεφαλαίου \ref{chap:scheme_presentation}.
+
+Όμοια με πριν, αρχικά ορίζουμε τις συναρτήσεις
+\begin{equation*}
+\begin{matrix}
+\Phi(x) =  \begin{bmatrix}
+\varphi_1(x) \\
+\varphi_2(x)
+\end{bmatrix}
+& \text{και} \qquad  & \Gamma(x) = \begin{bmatrix}
+\gamma_{11}(x) & \gamma_{12}(x) \\
+\gamma_{21}(x) & \gamma_{22}(x)
+\end{bmatrix}
+\end{matrix}
+\end{equation*}
+όπου κάθε μια αποτελείται από τα άθροισμα γκαουσιανών των εξισώσεων \eqref{eq:mimo_zphi_def} - \eqref{eq:mimo_zgamma_def}, και στην συνέχεια ορίζουμε τις συναρτήσεις $f(x)$ και $G(x)$ ως
+\begin{equation*}
+\begin{matrix}
+f(x) =  \Phi(x) \Gamma^{-1}(x) \qquad
+& \text{και} \qquad  & G(x) = \Gamma^{-1}(x)
+\end{matrix}
+\end{equation*}
+όπου $f(x)$ και $G(x)$ ο συμβολισμός συμπαγής μορφής που χρησιμοποιείται και στην εξίσωση~\eqref{} του Κεφαλαίου \ref{chap:scheme_presentation}.
+
+\begin{equation}
+	\varphi_i(x) = \sum_{k = 1}^{3} w_{\phi_{ik}}^* z_{\phi_k} (x) = W_{\varphi_i}^{*T} Z_\varphi(x), \quad i = 1,2
+	\label{eq:mimo_zphi_def}
+\end{equation}
+\begin{equation}
+\gamma_{ij}(x) = \sum_{k = 1}^{3} w_{\gamma_{ijk}}^* z_{\gamma_k} (x) = W_{\gamma_{ij}}^{*T} Z_{\gamma}(x), \quad i,j = 1,2
+\label{eq:mimo_zgamma_def}
+\end{equation}
+Τα διανύσματα $Z_\varphi(x)$ και $Z_\gamma(x)$ αποτελούνται από γκαουσιανές συναρτήσεις με κέντρα τα σημεία:
+\begin{equation*}
+\begin{matrix}
+c_1 = \begin{bmatrix}  0.5 \\ 0.8 \\  0.2 \end{bmatrix}^Τ & \: \text{,} &
+c_2 = \begin{bmatrix}  0.3 \\ 0.1 \\  0.5 \end{bmatrix} & \: \text{και} &
+c_3 = \begin{bmatrix} -0.2 \\ 0.4 \\ -0.2 \end{bmatrix} 
+\end{matrix}
+\end{equation*}
+και διασπορές $\sigma = 0.3$. Όπως και πριν, καθώς το σύστημα είναι τύπου \textit{Euler Lagrange} οι συναρτήσεις $z_{\phi_k}(x)$ είναι συνάρτηση της ποσότητας $\norm{x - c_k}$, δηλαδή του πλήρους διανύσματος καταστάσεων ενώ αντίθετα οι συναρτήσεις $z_{\gamma_k}(x)$ είναι συνάρτηση του $\abs{x_1 - c_{kx}}$, δηλαδή μόνο του $x_1$. Τέλος, τα βάρη κάθε $W_{\varphi_i}^{*}$ και $W_{\gamma_{ij}}^{*}$ κάθε συνάρτησης δίνονται στον πίνακα \ref{tab:mimo_wstar}.
+\begin{table}
+	\centering
+	\begin{tabular}{  c || r | r | r }
+		\hline\hline
+		\text{Συνάρτηση} & $w_{c_1}$ & $w_{c_2}$ & $w_{c_3}$ \\
+		\hline\hline
+		$\varphi_1(x)$ & $1$ & $2$ & $3$  \\ \hline
+		$\varphi_2(x)$ & $4$ & $5$ & $6$  \\ \hline
+		$\gamma_{11}(x)$ & $3$ & $0$ & $5$ \\ \hline
+		$\gamma_{12}(x)$ & $1$ & $2$ & $3$ \\ \hline
+		$\gamma_{21}(x)$ & $-1$ & $-2$ & $-3$ \\ \hline
+		$\gamma_{22}(x)$ & $6$ & $7$ & $8$ \\ \hline
+	\end{tabular}
+	\caption{$W_{\varphi_i}^{*}$ και $W_{\gamma_{ij}}^{*}$ του πειράματος \ref{subsec:rbf_mimo}.}
+	\label{tab:mimo_wstar}
+\end{table}
+
+{
+\begin{wraptable}[18]{r}{0.3\textwidth}
+	\centering
+	\captionsetup{format=plain}
+	\begin{tabular}{ l | c }
+		\hline\hline
+		\text{Parameter}  & Value  \\ \hline\hline
+		$k$               & $30$   \\ \hline
+		$\lambda$         & $1 $   \\ \hline
+		$\beta_{\varphi}$ & $0.4$  \\ \hline
+		$\beta_{\gamma}$  & $0.2$  \\ \hline
+		$\rho_0      $    & $4$    \\ \hline
+		$\rho_\infty $    & $0.02$ \\ \hline
+		$l           $    & $2$    \\ \hline
+		$\textit{ΔΤ} $    & $1$    \\ \hline \hline	
+	\end{tabular}
+	\caption{Παράμετροι σχήματος αναγνώρισης για το πείραμα \ref{subsec:rbf_mimo}}
+	\label{tab:rbf_mimo_params}
+\end{wraptable}
+\subsubsection{Σχήμα Αναγνώρισης}
+Για την αναγνώριση των άγνωστων συναρτήσεων, όπως και στο προηγούμενο πείραμα θα χρησιμοποιηθούν νευρωνικά δίκτυα RBF ίδιας δομής με αυτά των $Z_\varphi$ και $Z_\gamma$. Έτσι λοιπόν, σχηματίζουμε τις προσεγγίσεις:
+\begin{equation*}
+\hat{\Phi}(x,t)  =  
+%\begin{bmatrix}
+%\hat{\varphi}_1(x) \\
+%\hat{\varphi}_2(x)
+%\end{bmatrix}
+\begin{bmatrix}
+\hat{w}_{\varphi_1}(t)^T Z_\phi(x) \\
+\hat{w}_{\varphi_2}(t)^T Z_\phi(x)
+\end{bmatrix}
+\end{equation*}
+και
+\begin{equation*}
+\begin{matrix}
+\hat{\Gamma}(x,t) = \begin{bmatrix}
+\hat{w}_{\gamma_{11}}(t)^T Z_\gamma(x) 
+& \hat{w}_{\gamma_{12}}(t)^T Z_\gamma(x) \\
+\hat{w}_{\gamma_{21}}(t)^T Z_\gamma(x) 
+& \hat{w}_{\gamma_{22}}(t)^T Z_\gamma(x) \\
+\end{bmatrix}
+\end{matrix}
+\end{equation*}
+
+Αντίστοιχα με το πείραμα $\ref{subsec:rbf_siso}$, σύγκλιση των βαρών $\hat{w}_{\varphi_i}(t)$ και $\hat{w}_{\gamma_{ij}}(t)$,\\ $i,j = 1,2$ στις αντίστοιχες τιμές του πίνακα \ref{tab:rbf_mimo_params} συνεπάγεται σε επιτυχή αναγνώριση των άγνωστων συναρτήσεων του συστήματος. Τέλος, οι παράμετροι του σχήματος αναγνώρισης απεικονίζονται στον πίνακα \ref{tab:rbf_mimo_params}.
+}
+
+{
+\begin{wrapfigure}{r}{0.4\textwidth}
+	%\centering
+	\input{plots/experiments/mimoRBF/3d_ref.tex}
+	\captionsetup{format=plain}
+	\caption{Τροχιά $x(t)$ και κέντρα RBF στο πείραμα \ref{subsec:rbf_mimo}}
+	\label{fig:phase_plain_mimo}	
+\end{wrapfigure}
+\subsubsection{Αποτελέσματα}
+Το σύστημα προσομοιώθηκε για 2000 περιόδους, και στα σχήματα \ref{fig:mimo_phi_weights}, \ref{fig:mimo_gamma1_weights} και \ref{fig:mimo_gamma2_weights} απεικονίζεται η εξέλιξη των βαρών κάθε RBF νευρωνικού δικτύου στον χρόνο. Συγκρίνοντας τις γραφικές αυτές με τον πίνακα \ref{tab:mimo_wstar}, εύκολα επαληθεύεται πως τα βάρη συγκλίνουν στις σωστές τιμές. Τέλος, στο σχήμα \ref{fig:phase_plain_mimo} φαίνεται η τρισδιάστατη τροχιά $x(t)$ στον $\mathbb{R}^3$ καθώς και τα κέντρα $c$. Από το σχήμα φαίνεται πως η τροχιά διέρχεται και από τα τρία κέντρα των οπισθοδρομητών και κατά συνέπεια ικανοποιεί την ΣΕΔ της παραγράφου \ref{subsec:todo}.
+
+}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/mimoRBF/w_phi1.tex}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/mimoRBF/w_phi2.tex}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{ Χρονική εξέλιξη των βαρών $\hat{W}_{\varphi_1}(t)$ (δεξιά) και $\hat{W}_{\varphi_2}(t)$ (αριστερά) για το πείραμα \ref{subsec:rbf_mimo}}
+	\label{fig:mimo_phi_weights}
+\end{figure}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/mimoRBF/w_gamma11.tex}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/mimoRBF/w_gamma12.tex}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{ Χρονική εξέλιξη των βαρών $\hat{W}_{\gamma_{11}}(t)$ (δεξιά) και $\hat{W}_{\gamma_{12}}(t)$ (αριστερά) για το πείραμα \ref{subsec:rbf_mimo}}
+		\label{fig:mimo_gamma1_weights}
+	\end{figure}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/mimoRBF/w_gamma21.tex}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/mimoRBF/w_gamma22.tex}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{ Χρονική εξέλιξη των βαρών $\hat{W}_{\gamma_{21}}(t)$ (δεξιά) και $\hat{W}_{\gamma_{22}(t)}$ (αριστερά) για το πείραμα \ref{subsec:rbf_mimo}}
+	\label{fig:mimo_gamma2_weights}
+	\end{figure}
+
+\pagebreak
+
+\section{Πραγματικά Συστήματα}
+Σε αυτή την παράγραφο, σκοπός είναι η εφαρμογή του σχήματος αναγνώρισης που αναπτύσσεται στα πλαίσια αυτής της εργασίας, σε πραγματικά συστήματα. Για τον σκοπό αυτό, έχουμε επιλέξει τα εξής τρία (ή δυο) δοκιμαστικά συστήματα:
+\begin{itemize}
+	\item ένα απλοποιημένο μοντέλο του φαινόμενου \textit{Wing Rock} το οποίο παρουσιάζεται στα αεροσκάφη τύπου \textit{Delta Wing}. Το σύστημα αυτό πρόκειται για ένα δευτεροβάθμιο σύστημα όπου η $f(x)$ είναι συνάρτηση και των δυο καταστάσεων ενώ η $g(x)$ είναι μια σταθερά.
+	
+	\item ένα οδηγούμενο ταλαντωτή \textit{Van Der Pol}, το οποίο είναι ένα σύστημα δευτέρου βαθμού. Οι συναρτήσεις $f(x)$ και $g(x)$ είναι συναρτήσεις και των δυο καταστάσεων $x_1$, $x_2$ συνεπώς αυτό το σύστημα δεν εμπίπτει στην κατηγορία συστημάτων \textit{Euler Lagrange} που μελετάμε.
+	
+	\item ένα βραχίονα δυο βαθμών ελευθερίας. Το σύστημα αυτό είναι σύστημα ΠΕΠΕ και εμπίπτει στην κατηγορία \textit{Euler Lagrange} αφού ο πίνακας αδράνειας είναι συνάρτηση μόνο των θέσεων των αρθρώσεων και όχι των ταχυτήτων.
+\end{itemize}
+
+
+\subsection{Φαινόμενο Wing Rock}
+Το σύστημα που θα μελετήσουμε αποτελεί μια μοντελοποίηση του φαινομένου \textit{Wing Rock}. Το φαινόμενο αυτό αναφέρεται την αστάθεια ανοικτού βρόγχου στην γωνία roll, που παρατηρείται στα αεροπλάνα τύπου \textit{Delta Wing} όταν έχουν μεγάλη \textit{γωνία προσβολής}(?) (Angle of Attack)[ref wikipedia]. Το μοντέλο που θα χρησιμοποιηθεί για αυτό το πείραμα μπορεί να βρεθεί στο βιβλίο [](να ρωτήσω τον κύριο Ροβιθάκη)
+
+Το σύστημα αποτελείται από δυο καταστάσεις, την γωνία roll του αεροσκάφους την οποία συμβολίζουμε με $x_1$ και την αντίστοιχη γωνιακή ταχύτητα την οποία συμβολίζουμε με $x_2$. Έτσι λοιπόν, το σύστημα περιγράφεται από τις εξισώσεις καταστάσεων:
+\begin{equation}
+\begin{split}
+\dot{x}_1 &= x_2 \\
+\dot{x}_2 &= 
+\underbrace{\theta_1 x_1 + \theta_2 x_2 + (\theta_3 \abs{x_1} 
+	+ \theta_4 \abs{x_2})x_2 + \theta_5 x_1^3}_{f(x)} 
++ \underbrace{\theta_6}_{g(x)} u(t)
+\end{split}
+\label{eq:wing_rock_state_space}
+\end{equation}
+όπου $u(t)$ είναι η είσοδος ελέγχου και τα $\theta_i$ σταθερές που δίνονται στον παρακάτω πίνακα:
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{ c | c | c | c | c | c}
+			\hline
+			\hline
+			$\theta_1$ & $\theta_2$  & $\theta_3$ & $\theta_4$  & $\theta_5$ & $\theta_6$  \\   \hline 
+			$-0.018$ & $0.015$  & $-0.062$ & $0.009$ & $0.021$ & $0.75$   \\
+			\hline
+			\hline
+		\end{tabular}
+		\caption{Σταθερές $\theta_i$ της εξίσωσης~\eqref{eq:wing_rock_state_space}}
+		\label{tab:wing_rock_params}
+	\end{center}
+\end{table}
+
+{\begin{wraptable}[16]{r}{0.3\textwidth}
+		\centering
+		\captionsetup{format=plain}
+		\begin{tabular}{ l | c }
+			\hline\hline
+			\text{Parameter} & Value \\ \hline\hline
+			$k$             & $30$   \\ \hline
+			$\lambda$       & $1 $   \\ \hline
+			$\beta_{\varphi} \;\text{(bias)}$     & $1$ \\ \hline
+			$\beta_{\varphi} \;\text{(gaussian)}$ & $10$ \\ \hline
+			$\beta_{\gamma}$ & $0.3$  \\ \hline
+			$\rho_0      $ & $4$  \\ \hline
+			$\rho_\infty $ & $0.02$  \\ \hline
+			$l           $ & $2$  \\ \hline
+			$\textit{ΔΤ} $  & $2$ 	\\ \hline \hline	
+		\end{tabular}
+		\caption{Παράμετροι σχήματος αναγνώρισης για το φαινόμενο \textit{Wing Rock}}
+		\label{tab:wing_rock_schema_params}
+	\end{wraptable}
+	
+	\subsubsection{Σχήμα Αναγνώρισης}
+	Για την αναγνώριση του παραπάνω συστήματος θα εργαστούμε με τον ίδιο τρόπο που εργαστήκαμε στα πειράματα του προηγούμενο κεφαλαίου, με την διαφορά ότι καθώς η $g(x)$ είναι άγνωστη σταθερά, για την εκτίμηση της θα χρησιμοποιήσουμε μια σταθερά έναντι ενός νευρωνικού δικτύου που θα εισήγαγε περιττή πολυπλοκότητα. Έτσι, σχηματίζουμε τις προσεγγίσεις:
+	\begin{equation*}
+	\begin{matrix}
+	\hat{\varphi}(x,t)  = \hat{W}_{\varphi}^T(t) Z_\varphi(x) & \text{και} &  
+	\end{matrix}\hat{\gamma}(t) = w_{\gamma 0}(t)
+	\end{equation*}
+	Τέλος, σημειώνουμε πως το προσπαθούμε να αναγνωρίσουμε το σύστημα για εύρος γωνιών $x_1 \in [-\frac{\pi}{4},\frac{\pi}{4}]$ το οποίο φαίνεται λογική τιμή δεδομένου ότι πρόκειται για την γωνία roll ενός αεροσκάφους. Για το εύρος ταχυτήτων αντίθετα, δεν γνωρίζουμε ποιο θα μπορούσε να είναι ένα καλό σύνολο τιμών και συνεπώς επιλέγεται πάλι το σύνολο \\ $[-\frac{\pi}{4},\frac{\pi}{4}]$ χάριν συμμετρίας του συνόλου αναγνώρισης. Έτσι λοιπόν, το σύνολο αναγνώρισης ορίζεται ως το $\Omega_x = [-\frac{\pi}{4},\frac{\pi}{4}] \times [-\frac{\pi}{4},\frac{\pi}{4}]$.
+	
+	}
+
+	Τα κέντρα του νευρωνικού δικτύου RBF για την αναγνώριση της $\varphi(x)$ επιλέγονται ως ένα πλέγμα που καλύπτει ομοιόμορφα το $\Omega_x$ και αποτελείται από $225$ κέντρα. Τα σημεία του πλέγματος δίνονται παρακάτω:
+	\begin{equation*}
+	C = \begin{Bmatrix}
+	0 \pm \frac{\pi }{28} k, \quad  k \in [0,1,...,7]
+	\end{Bmatrix} \times
+	\begin{Bmatrix}
+	0 \pm  \frac{\pi }{28} k, \quad  k \in [0,1,...,7]
+	\end{Bmatrix}
+	\end{equation*}
+	
+	Τέλος, χρησιμοποιούμε τους νόμους ελέγχου και την μεθοδολογία σχεδίασης που παρουσιάζεται στην υποπαράγραφο τοδο, με τις σχεδιαστικές παραμέτρους να δίνονται στον Πίνακα \ref{tab:wing_rock_schema_params}.
+	
+	\begin{figure}
+		\begin{subfigure}{0.5\textwidth}
+			\input{plots/experiments/wing_rock/w_phi.tex}
+			%\caption{$\hat{W}_\varphi(t)$}
+		\end{subfigure}
+		\begin{subfigure}{0.5\textwidth}
+			\input{plots/experiments/wing_rock/w_gamma.tex}
+			%\caption{$\hat{W}_\gamma(t)$)}
+		\end{subfigure}
+		\caption{ Χρονική εξέλιξη των βαρών $\hat{W}_\varphi(t)$ (αριστερά) και της σταθεράς $\hat{w}_{\gamma 0}(t)$ (δεξιά) συναρτήσει του χρόνου.}
+		\label{fig:wing_rock_weights}
+	\end{figure}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/wing_rock/f_approx_surf.eps}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/wing_rock/f_approx_error.eps}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{Προσέγγιση της συνάρτησης $\varphi(x)$ στο πείραμα \textit{Wing Rock} (αριστερά) και το σφάλμα $\tilde{\varphi}(x)$ (δεξιά)}
+	\label{fig:wing_rock_phi_approximation}
+\end{figure}
+
+\subsubsection{Αποτελέσματα}
+Το σχήμα αναγνώρισης που περιγράψαμε προσομοιώθηκε για 50 περιόδους. Στο σχήμα \ref{fig:wing_rock_weights} βλέπουμε την χρονική εξέλιξη κάποιων βαρών $\hat{w}_{\varphi i}$ και της σταθεράς $\hat{w}_{\gamma 0}(t)$ συναρτήσει του χρόνου. Από το σχήμα είναι προφανές πως ο χρόνος εκπαίδευσης ήταν αρκετός για να συγκλίνουν τα βάρη του νευρωνικού δικτύου καθώς και η σταθερά που χρησιμοποιείται για την εκτίμηση της $\gamma(x)$.
+
+Στο σχήμα \ref{fig:wing_rock_phi_approximation} παρουσιάζεται η προσέγγιση της συνάρτησης $\hat{\varphi}(x)$ καθώς και το σφάλμα $\tilde{\varphi}(x)$. Όπως φαίνεται από τις δυο αυτές γραφικές παραστάσεις, το αποτέλεσμα της διαδικασίας αναγνώρισης της $\varphi(x)$ είναι πολύ ικανοποιητικό. Τέλος, παραθέτουμε έναν πίνακα με κάποια χαρακτηριστικά του σφάλματος προσέγγισης καθώς και της συνάρτησης $\varphi(x)$ εντός του συνόλου $\Omega_x$ ,έτσι ώστε να διευκολύνουμε την εξαγωγή συμπερασμάτων για την ποιότητα της προσέγγισης.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{  c | c | c | c | c | c }
+		& $\min_{x \in \Omega_x}$ & $\max_{x \in \Omega_x}$ & Εύρος Τιμών & $\max(\abs{\tilde{\varphi}(x)})$ & Σχετικό Σφάλμα \\ \hline
+		$\varphi(x)$ & $-0.0325$ & $0.0332$ & $0.0657$ & $0.0084$ & $12.79\%$ \\
+	\end{tabular}
+	\caption{}
+	\label{tab:stat_of_function_wing_rock}
+\end{table}
+
+Όπως μπορούμε να δούμε και από τον πίνακα \ref{tab:stat_of_function_wing_rock}, το μέγιστο ποσοστιαίο ή σχετικό  σφάλμα προσέγγισης εντός του $\Omega_x$ είναι $12.79\%$, γεγονός που επιβεβαιώνει πως τα αποτελέσματα είναι πολύ ικανοποιητικά.
+
+Σχετικά με την ποιότητα προσέγγισης της $\gamma(x)$ η πραγματική τιμή της είναι ίση με $1/\theta_6 = 1.3333$ ενώ το βάθος $w_{\gamma 0}(t)$ συγκλίνει στην τιμή $1.3335$, που σημαίνει ότι και σε αυτή την περίπτωση το σχήμα αναγνωρίζει επιτυχώς την άγνωστη συνάρτηση.
+
+
+\subsection{Ταλαντωτής \textit{Van der Pol}}
+Το δεύτερο πραγματικό σύστημα που θα μελετήσουμε είναι ένας οδηγούμενος ταλαντωτής \textit{Van der Pol}, το οποίο είναι ένα αρκετά κλασσικό σύστημα στην βιβλιογραφία του αυτομάτου ελέγχου. 
+
+Το σύστημα αυτό είναι ένα μη-γραμμικό σύστημα δευτέρου βαθμού και περιγράφεται από τις εξισώσεις
+\begin{equation}
+\begin{split}
+\dot{x}_1 &= x_2 \\
+\dot{x}_2 &= \mu (1-x_1^2)x_2 - x_1 + 1+x_1^2+x_2^2)u(t)
+\end{split}
+\end{equation}
+όπου $\mu$ θετική σταθερά. Στο πείραμα μας θεωρούμε πως $\mu = 1$. Όπως μπορούμε να δούμε η $g(x)$ σε αυτή την περίπτωση είναι συνάρτηση και των δυο καταστάσεων, συνεπώς το σύστημα δεν είναι τύπου \textit{Euler Lagrange}.
+
+\subsubsection{Σχήμα Αναγνώρισης}
+Για την αναγνώριση του παραπάνω συστήματος θα χρησιμοποιήσουμε δυο νευρωνικά δίκτυα RBF, ένα για την αναγνώριση της $\varphi(x)$ και ένα για την αναγνώρισης της  $\gamma(x)$. Καθώς και οι δυο άγνωστες συναρτήσεις εξαρτώνται από το πλήρες διάνυσμα καταστάσεων $x(t) =\bmqty{x_1(t),x_2(t)}^T$, θα χρησιμοποιηθεί το ίδιο διάνυσμα οπισοθδρομητών για τις προσεγγίσεις $\hat{\varphi}(x)$ και $\hat{\gamma}(x)$ όπως φαίνεται παρακάτω:
+\begin{equation*}
+\begin{matrix}
+\hat{\varphi}(x,t)  = \hat{W}_{\varphi}^T(t) Z(x) & \text{και} & \hat{\gamma}(x,t) = \hat{W}_{\gamma}^T(t) Z(x) 
+\end{matrix}
+\end{equation*}
+Σκοπός είναι η προσέγγιση του συστήματος στο σύνολο $\Omega_x = [-2,2] \times [-2,2] $. Για τον σκοπό αυτό, τα κέντρα $c_i$ των RBF συναρτήσεων του δικτύου $Z(x)$, επιλέγονται ως:
+\begin{equation*}
+	C = \begin{Bmatrix}
+	-2 +  \frac{4}{9}k, \quad  k \in [0,1,...,9]
+	\end{Bmatrix} \times
+	\begin{Bmatrix}
+	-2 +  \frac{4}{9}k, \quad  k \in [0,1,...,9]
+	\end{Bmatrix}
+\end{equation*}
+δηλαδή είναι το καρτεσιανό γινόμενο 10 ομοιόμορφα κατανεμημένων σημείων στο διάστημα $[-2,2]$, σχηματίζοντας έτσι ένα πλέγμα που καλύπτει ομοιόμορφα το $\Omega_x$. Οι υπόλοιποι παράμετροι του σχήματος προσομοίωσης φαίνονται στον πίνακα \ref{vdp_schema_params}.
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/vdp/w_phi.tex}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/vdp/w_gamma.tex}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{ Χρονική εξέλιξη των βαρών $\hat{W}_\varphi(t)$ (αριστερά) και της σταθεράς $\hat{w}_{\gamma 0}(t)$ (δεξιά) συναρτήσει του χρόνου.}
+	\label{fig:vdp_weights}
+\end{figure}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/vdp/phi_hat.eps}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/vdp/gamma_hat.eps}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{Σύγκριση των συναρτήσεων $\varphi(x)$ (αριστερά) και $\gamma(x)$ (δεξιά) με τις προσεγγίσεις τους $\hat{\varphi}(x)$ και $\hat{\gamma}(x)$ αντίστοιχα. Με γκρι (transparent) απεικονίζονται οι πραγματικές συναρτήσεις ενώ οι χρωματισμένες επιφάνειες είναι οι προσεγγίσεις αυτών. }
+	\label{fig:vdp_approximations}
+\end{figure}
+
+
+
+{\begin{wraptable}[16]{r}{0.3\textwidth}
+		\centering
+		\captionsetup{format=plain}
+		\begin{tabular}{ l | c }
+			\hline\hline
+			\text{Parameter} & Value \\ \hline\hline
+			$k$             & $30$   \\ \hline
+			$\lambda$       & $1 $   \\ \hline
+			$\beta_{\varphi} \;\text{(bias)}$     & $10$ \\ \hline
+			$\beta_{\varphi} \;\text{(gaussian)}$ & $50$ \\ \hline
+			$\beta_{\gamma} \;\text{(bias)}$     & $5$ \\ \hline
+			$\beta_{\gamma} \;\text{(gaussian)}$ & $20$ \\ \hline
+			$\rho_0      $ & $4$  \\ \hline
+			$\rho_\infty $ & $0.02$  \\ \hline
+			$l           $ & $2$  \\ \hline
+			$\textit{ΔΤ} $  & $1$ 	\\ \hline \hline	
+		\end{tabular}
+		\caption{Παράμετροι σχήματος αναγνώρισης για τον ταλαντωτή \textit{Van Der Pol}}
+		\label{tab:vdp_schema_params}
+	\end{wraptable}
+
+\subsubsection{Αποτελέσματα}
+Χρησιμοποιώντας τις παραπάνω παραμέτρους, έγινε προσομοίωση του συστήματος κλειστού βρόγχου για $300$ περιόδους. Στο σχήμα \ref{tab:vdp_schema_params} παρουσιάζεται η εξέλιξη κάποιων παραμέτρων των δυο νευρωνικών δικτύων. Από τα σχήματα αυτά φαίνεται πως ο χρόνος προσομοίωσης ήταν αρκετός για να σταθεροποιηθούν τα βάρη. Βλέπουμε επίσης, πως ενώ τα βάρη της $\hat{\varphi}(x)$ συγκλίνουν σε κάποιες τιμές χωρίς μεγάλες διακυμάνσεις, τα βάρη της $\hat{\gamma}(x)$ εκτελούν ταλάντωση - διαφορετικού πλάτους το κάθε ένα από αυτά - γύρω από κάποιες τιμές. Το φαινόμενο αυτό οφείλεται στην επιλογή μεγάλων κερδών $\beta_{\gamma_{ij}}$ και μπορεί να βελτιωθεί μειώνοντας τα αντίστοιχα κέρδη. Στην προκειμένη περίπτωση ωστόσο, για να αντιμετωπίσουμε το πρόβλημα αυτό, εξάγουμε τα βάρη $w_{\gamma i}$ ώς:
+\begin{equation*}
+	\bar{w}_{\gamma i} = mean_{t \in [t_a,t_b]} \{w_{\gamma i}(t)\}
+\end{equation*}
+όπου $[t_a,t_b]$ ένα επιλεγμένο χρονικό διάστημα στο οποίο τα βάρη κινούνται γύρω από μια σταθερή μέση τιμή. Στο συγκεκριμένο πείραμα χρησιμοποιείται ο μέσος όρος κατά τις δυο τελευταίες περιόδους της προσομοίωσης.
+
+Σχετικά με την ποιότητα της προσέγγισης, στο σχήμα \ref{fig:vdp_approximations} απεικονίζονται οι προσεγγίσεις των συναρτήσεων σε σύγκριση με τις πραγματικές, ενώ στα σχήματα \ref{fig:vdp_phi_tilde} και \ref{fig:vdp_gamma_tilde} παρουσιάζουμε το σφάλματα $\tilde{\varphi}(x_1,x_2)$ και $\tilde{\gamma}(x_1,x_2)$ αντίστοιχα. Τέλος, στον πίνακα \ref{tab:statistics_vdp} δίνουμε κάποια στατιστικά χαρακτηριστικά των προσεγγίσεων καθώς και της πραγματικής συνάρτησης έτσι ώστε να διευκολύνουμε την διαδικασία της αξιολόγησης αποτελεσμάτων.
+
+}
+
+\begin{table}
+	\centering
+	\begin{tabular}{  c | c | c | c | c | c }
+		& $\min_{x \in \Omega_x}$ & $\max_{x \in \Omega_x}$ & Έυρος Τιμών & $\max(\abs{\tilde{e}})$ & Σχετικό Σφάλμα  \\ \hline \hline
+		$\varphi(x)$ & $-0.8999$ & $0.8999$ & $1.7997$ & $0.1496$ & $8.31\%$ \\
+		$\gamma(x)$  & $ 0.1111$ & $ 1.0$   & $0.8889$ & $0.0417$ & $4.69\%$
+	\end{tabular}
+	\label{tab:statistics_vdp}
+	\caption{Στατιστικά στοιχειά προσεγγίσεων για τον ταλαντωτή \textit{Van Der Pol}}
+	%\caption{Στατιστικά χαρακτηριστικά των προς αναγνώριση συναρτήσεων και του σφάλματος των εκτιμήσεων. (Για την συνάρτηση $f(x)g^{-1}(x)$ η μετρική \textit{NRMSE} δεν είναι ακριβής καθώς η μέση τιμή της συνάρτησης είναι ίση με το μηδέν)}
+\end{table}
+
+\begin{figure}
+	\includegraphics{plots/experiments/vdp/phi_hat_error.eps}
+	\caption{Σφάλμα $\tilde{\varphi}(x)$ στο σύνολο $\Omega_x$}
+	\label{fig:vdp_phi_tilde}
+\end{figure}
+
+\begin{figure}
+	\includegraphics{plots/experiments/vdp/gamma_hat_error.eps}
+	\caption{Σφάλμα $\tilde{\gamma}(x)$ στο σύνολο $\Omega_x$}
+	\label{fig:vdp_gamma_tilde}
+\end{figure}
+
+Από τα παραπάνω στοιχεία οδηγούμαστε στο συμπέρασμα πως το σχήμα αναγνώρισης καταφέρνει να αναγνωρίσει επιτυχώς τις μη γραμμικότητες του  ταλαντωτή \textit{Van der Pol} παρόλο που δεν ανήκει στην κλάση συστημάτων \textit{Euler Lagrange} που μελετάμε. Κατά δεύτερον αξίζει να σημειωθεί πως μελετώντας τις γραφικές παραστάσεις \ref{fig:vdp_phi_tilde} και \ref{fig:vdp_gamma_tilde}, παρατηρούμε πως ενώ η ποιότητα των προσεγγίσεων είναι πολύ καλή στο εσωτερικό του $\Omega_x$, στο σύνορο φαίνεται πως η ποιότητα χειροτερεύει. Το αποτέλεσμα αυτό είναι αρκετά λογικό, αφού στο εσωτερικό του χώρου $\Omega_x$ υπάρχει επαρκής κάλυψη από γκαουσιανές ενώ αντίθετα τα σημεία που βρίσκονται στο σύνορο προσεγγίζονται από ένα λιγότερο πυκνό πλέγμα γκαουσιανών (εδώ θέλει rewrite).
+
+
+%\subsection{Βραχίονας δυο βαθμών ελευθερίας}
+%Σε αυτό το τελευταίο πείραμα θα προσπαθήσουμε να αναγνωρίζουμε το δυναμικό σύστημα που περιγράφει την λειτουργία ενός βραχίονα δυο βαθμών ελευθερίας. Αρχικά παρουσιάζουμε τις εξισώσεις που περιγράφουν την λειτουργία του: 
+
+\pagebreak
+
+\subsection{Ρομποτικός βραχίονας}
+\label{exampleB}
+Το τελευταίο σύστημα που θα εξετάσουμε είναι ο βραχίονας δύο βαθμών ελευθερίας, όπως παρουσιάστηκε στην εργασία\cite{bechlioulis2008robust, Theodorakopoulos2016}, ο οποίος περιγράφεται από την ακόλουθη δυναμική:
+\[
+M(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau,
+\]
+όπου $q = [q_1, q_2]$ είναι οι γωνιακές θέσεις [\si{\radian/\second}], $\dot q$ οι γωνιακές ταχύτητες [\si{\radian/\second^2}], και $\ddot q$ οι γωνιακές επιταχύνσεις  r/s2. Ο θετικά ορισμένος πίνακας αδράνειας $M(q)$ ορίζεται ως:
+\[
+M(q) = \bmqty{M_{11} & M_{12}\\ M_{21} & M_{22}}
+\]
+με
+\begin{align*}
+M_{11} &= I_{Z_1} + I_{Z_2} + 0.25 m_1 \ell_1^2 
++ m_2(\ell_1^2 + 0.25 \ell_2^2 + \ell_1 \ell_2 c_2),\\
+M_{12} &= M_{21} = I_{Z_2} + m_2 (0.25 \ell_2^2 + 0.5 \ell_1 \ell_2 c_2),\\
+M_{22} &= I_{Z_2} + 0.25 m_2 \ell_2^2,
+\end{align*}
+όπου $I_{Z_1}$, $I_{Z_2}$ αναπαριστούν τις ροπές αδράνειας των συνδέσμων [\si{\kilo\gram \metre^2}], $\ell_1, \ell_2$ είναι τα μήκη τους [\si{\metre}], και $m_1$, $m_2$ οι μάζες τους [\si{\kilo\gram}]. Επιπλέον, χρησιμοποιείται ο παρακάτω συμβολισμός χάριν συντομίας:
+\[\begin{array}{ll}
+c_1 = \cos(q_1) & c_{12} = \cos(q_1 + q_2)\\
+s_2 = \sin(q_2) & c_2 = \cos(q_2)
+\end{array}\]
+Ακόμη, ως $C(q, \dot q)$ συμβολίζουμε τον πίνακα που περιέχει τις δυνάμεις \textit{Coriolis}:
+\[
+C(q, \dot q)\dot q = \bmqty{-c \dot q_2 +  & -c(\dot q_1 + \dot q_2)\\ c \dot q_1 & 0}
+\]
+Με τον όρο $c$, συμβολίζουμε τον όρο $c = 0.5 m_2 \ell_1 \ell_2 s_2$ για συντομία. Επιπροσθέτως, $g(q)$ είναι το διάνυσμα των βαρυτικών ροπών:
+\[
+g(q) = 
+\bmqty{0.5 m_1 g \ell_1 c_1 + m_2 g (\ell_1 c_1 + 0.5 \ell_2 c_{12}) \\
+	0.5 m_2 g \ell_2 c_{12}}  
+\]
+όπου $g = 9.81 \si{\metre\per\second^2}$ είναι η βαρυτική σταθερά επιτάχυνσης. Τέλος, $\tau =[\tau_1, \tau_2]$ είναι οι ροπές [\si{\newton\metre}] οι οποίες δρουν ως είσοδοι ελέγχου. Οι ακριβείς τιμές των παραμέτρων του συστήματος αναγράφονται στον Πίνακα~\ref{tab:2dof_params}. 
+
+Το σύστημα μπορεί εύκολα να έρθει στη μορφή~\eqref{eq:sys1} πολλαπλασιάζοντας από αριστερά με τον θετικά ορισμένο πίνακα $M^{-1}(q)$, καταλήγοντας στο ακόλουθο σύστημα διαφορικών εξισώσεων:
+\[
+\ddot q = - M^{-1}(q) \pqty{C(q,\dot q),\dot q + g(q)} + M^{-1}(q)u 
+\]
+Παρατηρώντας τις παραπάνω εξισώσεις εύκολα επαληθεύεται ότι το σύστημα ανήκει στην κλάση συστημάτων που μελετάμε αφού ο πίνακας $ M^{-1}(q)$ αφενός είναι θετικά ορισμένος, και αφετέρου είναι συνάρτηση μόνο των θέσεων $q_1$, $q_2$ και όχι των γωνιακών ταχυτήτων.
+
+\begin{table}
+	\centering
+	\caption{Παράμετροι του συστήματος για το παράδειγμα~\ref{exampleB}}
+	\label{tab:2dof_params}
+	\begin{tabular}{l | ccc}
+		\hline \hline
+		$i$ & $m_i$ & $I_{Z_i}$ & $\ell_i$ \\ \hline \hline
+		$1$ & $3.2$ & $0.96$ & $0.5$ \\\hline 
+		$2$ & $2.0$ & $0.81$ & $0.4$ \\ \hline 
+	\end{tabular}
+\end{table}
+
+
+{\begin{wraptable}[16]{r}{0.3\textwidth}
+		\centering
+		\captionsetup{format=plain}
+		\caption{Παράμετροι σχήματος αναγνώρισης για τον ρομποτικό βραχίονα}
+		\label{tab:2dof_schema_params}
+		\begin{tabular}{ l | c }
+			\hline\hline
+			\text{Parameter} & Value \\ \hline\hline
+			$k$             & $30$   \\ \hline
+			$\lambda$       & $1 $   \\ \hline
+			$\beta_{\varphi} \;\text{(bias)}$     & $0.2$ \\ \hline
+			$\beta_{\varphi} \;\text{(gaussian)}$ & $1$ \\ \hline
+			$\beta_{\gamma} \;\text{(bias)}$     & $0.1$ \\ \hline
+			$\beta_{\gamma} \;\text{(gaussian)}$ & $0.2$ \\ \hline
+			$\rho_0      $ & $4$  \\ \hline
+			$\rho_\infty $ & $0.02$  \\ \hline
+			$l           $ & $2$  \\ \hline
+			$\textit{ΔΤ} $  & $1$ 	\\ \hline \hline	
+		\end{tabular}
+	\end{wraptable}
+
+\subsubsection{Σχήμα Αναγνώρισης}
+Ορίζοντας το διάνυσμα καταστάσεων $x = \pqty{q_1,\dot q_1,q_2,\dot q_2 }^T$, σκοπός της παρούσας εφαρμογής, είναι η αναγνώριση των άγνωστων συναρτήσεων
+\begin{equation*}
+	\Phi(x) = G^{-1}(x) f(x) = -\pqty{C(q,\dot q),\dot q + g(q)}
+\end{equation*}
+και 
+\begin{equation*}
+\Gamma(x_1, x_3) = G^{-1}(x_1, x_3) = M(q)
+\end{equation*}
+στο συμπαγές και κλειστό σύνολο $\Omega_x =\bmqty{-0.5,0.5}^4$. Για τον σκοπό αυτό θα χρησιμοποιήσουμε νευρωνικά δίκτυα RBF με τα  διανύσματα οπισθοδρομητών $Z_\varphi(x)$ για την αναγνώριση των συναρτήσεων του $\Phi(x)$ και $Z_\gamma(x)$ για τις συναρτήσεις του $\Gamma(x)$. Ομοίως με τα παραδείγματα \ref{exp:vdp} και \ref{exp:wing_rock} τα κέντρα των οπισθοδρομητών επιλέγονται με τέτοιο τρόπο έτσι ώστε να καλύψουν ομοιόμορφα το σύνολο $\Omega_x$.\\ 
+Έτσι λοιπόν, τα κέντρα των οπιθοδρομητών $Z_\Phi(x)$ και $Z_\Gamma(x)$ τοποθετούνται στα πλέγματα
+\begin{equation*}
+\begin{matrix}
+	\mathcal{C}_\Phi = \bigtimes\limits_{i=1}^{4}  \begin{Bmatrix}
+	0 \pm  0.25 k, \quad  k = 1,2
+	\end{Bmatrix}
+&
+\text{και}
+&
+\mathcal{C}_\Gamma = \bigtimes\limits_{i=1}^{2}  \begin{Bmatrix}
+0 \pm  0.25 k, \quad  k = 1,2
+\end{Bmatrix}
+\end{matrix}
+\end{equation*} 
+αντίστοιχα. Στην συνέχεια επιλέγουμε τις διασπορές $\sigma$ έτσι ώστε δυο γειτονικές γκαουσιανές συναρτήσεις RBF να έχουν $75\%$ επικάλυψη, καταλήγοντας έτσι στην τιμή $\sigma = 0.2331$. Τέλος, σε κάθε προσέγγιση θα χρησιμοποιηθεί και ένας επιπλέον όρος πόλωσης (bias term). Οι υπόλοιποι παράμετροι του σχήματος αναγνώρισης παρουσιάζονται στον πίνακα \ref{tab:2dof_schema_params}.
+
+}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/2dof/w_phi1.tex}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\input{plots/experiments/2dof/w_gamma11.tex}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{Χρονική εξέλιξη επιλεγμένων βαρών των προσεγγίσεων $\hat{\varphi}_1(x)$ και $\hat{\gamma}_{11}(x)$}
+	\label{fig:2dof_w_conv}
+\end{figure}
+
+\subsubsection{Αποτελέσματα}
+Μετά από προσομοίωση του παραπάνω συστήματος για $50$ επαναλήψεις, τα βάρη των RBF νευρωνικών δικτύων έχουν συγκλίνει σε κάποιες σταθερές τιμές όπως φαίνεται στο σχήμα \ref{fig:2dof_w_conv}. Παρόλο που στο συγκεκριμένο σχήμα απεικονίζονται τα βάρη μόνο δυο προσεγγίσεων, σημειώνουμε πως και για τις υπόλοιπες συναρτήσεις τα βάρη των νευρωνικών δικτύων έχουν σταθεροποιηθεί.
+
+Σε αντίθεση με τα προηγούμενα πειράματα που το ζητούμενο ήταν η προσέγγιση συναρτήσεων δυο διαστάσεων, στο συγκεκριμένο πρόβλημα είναι αρκετά δυσκολότερη η αξιολόγηση των αποτελεσμάτων καθώς η δυναμική του συστήματος περιγράφεται από συναρτήσεις τεσσάρων μεταβλητών, καθιστώντας την οπτική αξιολόγηση ανέφικτη. Για τον λόγο αυτό, στον Πίνακα \ref{tab:statistics_2dof} παραθέτουμε κάποια στατιστικά χαρακτηριστικά  τόσο των άγνωστων συναρτήσεων όσο και του σφάλματος προσέγγισης.
+
+\begin{table}
+	\centering
+	\begin{tabular}{  c | c | c | c | c | c }
+		& $\min_{x \in \Omega_x}$ & $\max_{x \in \Omega_x}$ & Έυρος Τιμών & $\max(\| \tilde{f} \| )$ & $mean(\| \tilde{f} \|)$  \\ \hline \hline
+		$\varphi_1(x)$ & $-21.5815$ & $-17.6966$ & $3.8849$ & $ 0.69248$ & $0.11108$ \\
+		$\varphi_2(x)$ & $-3.9339$ & $-2.2117$ & $1.7221$ & $ 0.35229$ & $0.064058$ \\
+		$\gamma_{11}(x)$ & $2.901$ & $2.95$ & $0.048958$ & $ 0.37797$ & $0.081334$ \\
+		$\gamma_{12}(x)$ & $1.0655$ & $1.09$ & $0.024479$ & $ 0.23919$ & $0.030296$ \\
+		$\gamma_{21}(x)$ & $1.0655$ & $1.09$ & $0.024479$ & $ 0.14734$ & $0.040506$ \\
+		$\gamma_{22}(x)$ & $0.89$ & $0.89$ & $0.0$ & $ 0.12042$ & $0.017375$ \\
+	\end{tabular}
+	\label{tab:statistics_2dof}
+	\caption{Στατιστικά στοιχειά προσεγγίσεων για τον ρομποτικό βραχίονα}
+	%\caption{Στατιστικά χαρακτηριστικά των προς αναγνώριση συναρτήσεων και του σφάλματος των εκτιμήσεων. (Για την συνάρτηση $f(x)g^{-1}(x)$ η μετρική \textit{NRMSE} δεν είναι ακριβής καθώς η μέση τιμή της συνάρτησης είναι ίση με το μηδέν)}
+\end{table}
+
+Όπως μπορούμε να δούμε από τον Πίνακα \ref{tab:statistics_2dof}, η μέθοδος καταφέρνει να προσεγγίσει ικανοποιητικά τις συναρτήσεις $\varphi_i(x)$ κατά μέση τιμή, αφού το μέσο σφάλμα προσέγγισης είναι πολύ μικρότερο από τις τιμές της συνάρτησης εντός του $\Omega_x$. Ωστόσο, εξετάζοντας το μέγιστο σφάλμα $\max(\| \tilde{\varphi}_i \| )$ συμπεράνουμε πως θα υπάρχει μια περιοχή του $\Omega_x$ όπου η προσέγγιση δεν είναι και τόσο καλή.
+
+Σχετικά με την ποιότητα των προσεγγίσεων $\hat{\gamma}_{ij}(x)$, βλέπουμε πως η μέση τιμή των σφαλμάτων $\tilde{\gamma}_{ij}(x)$ είναι αρκετά μικρότερη από τις τιμές την συνάρτησης που αναγνωρίζεται, για κάθε περίπτωση. Παρόλα αυτά, συγκρίνοντας το εύρος τιμών των συναρτήσεων με την αντίστοιχη μέση τιμή κάθε σφάλματος, διαπιστώνουμε πως η προσέγγιση αποτυγχάνει σημαντικά στην αναγνώριση των μεταβολών κάθε συνάρτησης. Με άλλα λόγια, το σχήμα είναι ικανό να αναγνωρίσει ικανοποιητικά την μέση τιμή των $\gamma_{ij}(x)$ αλλά αδυνατεί να αναγνωρίσει την δομή της. Τέλος βλέπουμε πως και εδώ, η μέγιστη τιμή των σφαλμάτων αναγνώρισης είναι αρκετά μεγάλη. 
+
+Καθώς οι $\gamma_{ij}(x)$ είναι συναρτήσεις δυο μεταβλητών, είναι εφικτή η γραφική τους αναπαράσταση. Έτσι, στα σχήματα \ref{fig:2dof_g1_approximations} και \ref{fig:2dof_g2_approximations}, συγκρίνουμε τις προσεγγίσεις $\hat{\gamma}_{ij}(x)$ με τις αντίστοιχες πραγματικές συναρτήσεις. Από τα σχήματα αυτά επαληθεύονται οι παρατηρήσεις που βασίζονται στις στατιστικές μετρικές του Πίνακα \ref{tab:statistics_2dof}. Επίσης παρατηρείται και εδώ πως οι μέγιστες τιμές των σφαλμάτων αναγνώρισης βρίσκονται στο σύνολο του $\Omega_x$.
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/2dof/g11_hat.eps}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/2dof/g12_hat.eps}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{Σύγκριση των συναρτήσεων $\varphi(x)$ (αριστερά) και $\gamma(x)$ (δεξιά) με τις προσεγγίσεις τους $\hat{\varphi}(x)$ και $\hat{\gamma}(x)$ αντίστοιχα. Με γκρι (transparent) απεικονίζονται οι πραγματικές συναρτήσεις ενώ οι χρωματισμένες επιφάνειες είναι οι προσεγγίσεις αυτών. }
+	\label{fig:2dof_g1_approximations}
+\end{figure}
+
+\begin{figure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/2dof/g21_hat.eps}
+		%\caption{$\hat{W}_\varphi(t)$}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics{plots/experiments/2dof/g22_hat.eps}
+		%\caption{$\hat{W}_\gamma(t)$)}
+	\end{subfigure}
+	\caption{Σύγκριση των συναρτήσεων $\varphi(x)$ (αριστερά) και $\gamma(x)$ (δεξιά) με τις προσεγγίσεις τους $\hat{\varphi}(x)$ και $\hat{\gamma}(x)$ αντίστοιχα. Με γκρι (transparent) απεικονίζονται οι πραγματικές συναρτήσεις ενώ οι χρωματισμένες επιφάνειες είναι οι προσεγγίσεις αυτών. }
+	\label{fig:2dof_g2_approximations}
+\end{figure}
+
+
+\section{Παρατηρήσεις}
+Αυτό να μπεί εδώ ή όλο στο επόμενο, hopefully μικρότερο κεφάλαιο ?
