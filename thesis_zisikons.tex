@@ -1,11 +1,13 @@
 % !TeX document-id = {5197a7b8-f93e-4321-9063-fe70b38068a3}
 % !TeX TXS-program:compile = txs:///xelatex/[--shell-escape]
-\def \digital{1}
+\def \digital{0}
 \if 1\digital
 	\documentclass[12pt]{report}
 \else
 	\documentclass[twoside,openright,12pt]{report}
 \fi
+
+%%% -synctex=1 -interaction=nonstopmode --enable-write18 
 
 \usepackage[no-math]{fontspec}
 \usepackage{amsmath}
@@ -34,8 +36,8 @@
 \newtheorem{proposition}{Πρόταση}
 
 \renewenvironment{proof}{{\bfseries Απόδειξη}}{\qed}
-\renewenvironment{theorem}{{\bfseries Θεώρημα}}{}
-\renewenvironment{lemma}{{\bfseries Λήμμα}}{}
+%\renewenvironment{theorem}{{\bfseries Θεώρημα}}{}
+%\renewenvironment{lemma}{{\bfseries Λήμμα}}{}
 %\renewenvironment{assumption}{{\bfseries Υπόθεση}}{}
 
 
@@ -77,7 +79,11 @@
 %tikz
 \usepackage{standalone}
 \usepackage{tikz}
-\usetikzlibrary{shapes,positioning,matrix}
+\usetikzlibrary{shapes,positioning,matrix,arrows}
+
+% enumerate
+\usepackage[inline]{enumitem}
+
 
 %matlab2tikz
 \usepackage{pgfplots}
@@ -89,6 +95,10 @@
 \usepgfplotslibrary{fillbetween}
 \usepackage{grffile}
 %\usepackage{amsmath}
+
+%%%%%% External Package
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=ext_figures/,up to date check=diff]
 
 % Cancel Math
 \usepackage[makeroom]{cancel}  % \cancel math
@@ -118,7 +128,7 @@
 % hyphenation commands
 \hyphenation{method-ology}
 \hyphenation{comp-uter}
-\hyphenation{ά-γνωστες}
+\hyphenation{ά-γνω-στες}
 %\hyphenation{άγνω-στες}
 %\newcommand\xequal{\stackrel{\mathclap{\normalfont\mbox{def}}}{=}}
 
@@ -256,24 +266,13 @@
 \include{chapters/introduction}
 \include{chapters/mathematicalTools}
 \include{chapters/schemePresentationAlternative}
-\include{chapters/experiments}
-%\include{chapters/introduction}
-
-
-
-\chapter{(τίτλος κεφαλαίου 2)}
-
-
-
-\section{(τίτλος ενότητας 2.1)}
-
-
-\subsection{(τίτλος υποενότητας 2.1.1)}
+\include{chapters/experiments_test}
+\include{chapters/conclusions}
 
 
 
 \bibliographystyle{unsrt}
-\cite{*}
+%\cite{*}
 \bibliography{references}
 
 

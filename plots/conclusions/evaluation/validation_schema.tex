@@ -1,0 +1,79 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{standalone}
+
+\usepackage{amsmath}
+
+\begin{document}
+
+
+%\tikzstyle{block} = [draw, fill=blue!20, rectangle, 
+%    minimum height=3em, minimum width=6em]
+    
+\tikzstyle{block} = [draw, rectangle, 
+minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, node distance=2cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzstyle{split} = [draw, fill=black, circle,inner sep=0pt, minimum size=0.12cm ]
+
+
+%% 
+%\tikzstyle{split} = [ \draw[red,thick,dashed], circle (3cm);]
+
+% The block diagram code is probably more verbose than necessary
+
+
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+% We start by placing the blocks
+\node [input, name=input] at (0,0) {};
+%\node [block, right of=input,node distance=4cm] (plant) 
+%{ 
+%	$\begin{aligned}
+%	\dot{x}_1 &= x_2\\
+%	\dot{x}_2 &= f(x)g^{-1}(x) + g^{-1}(x)u(t)\\
+%	\end{aligned}$
+%};
+\node [block, label={Plant}]  at (4.5,1) (plant) 
+{ 
+	$\begin{aligned}
+	\dot{x}_1 &= x_2\\
+	\dot{x}_2 &= f(x) + g(x)u(t)\\
+	\end{aligned}$
+};
+\node [block, label=below:{Plant Approximation}]  at (4.5,-1) (plant_approx) 
+{	$\begin{aligned}
+	%\dot{\hat{x}}_1 &= \hat{x}_2\\
+	\hat{\gamma}(x) \dot{\hat{x}}_2 &= \hat{\varphi}(x) + u(t)\\
+	\end{aligned}$};
+
+
+\node [sum] at (8,0) (sum) {};
+\node [split] at (1,0) (split){};
+\node [output] at (9,0) (output) {};
+
+
+% We draw an edge between the controller and system block to 
+% calculate the coordinate u. We need it to place the measurement block. 
+\draw [->] (input) -- node[name=u] {$u(t)$} (split);
+
+% Once the nodes are placed, connecting them is easy. 
+\draw [draw,->] (split) |-  (plant_approx);
+\draw [draw,->] (split) |-  (plant);
+\draw [draw,->] (plant) -| node[anchor=south] {$x_2(t)$} node[pos=0.99,anchor=east] {$+$} (sum);
+\draw [draw,->] (plant_approx) -| node[anchor=north] {$\hat{x}_2(t)$}  node[pos=0.99] {$-$} (sum);
+
+\draw [->] (sum) -- node[name=u] {$e(t)$} (output);
+
+%\draw [draw,->] (plant_approx) |-  (plant_approx);
+
+%\draw [->] (system) -- node [name=y] {$y$}(output);
+%\draw [->] (y) |- (measurements);
+%\draw [->] (measurements) -| node[pos=0.99] {$-$} 
+
+\end{tikzpicture}
+
+\end{document}

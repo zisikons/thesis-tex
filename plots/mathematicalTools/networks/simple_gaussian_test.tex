@@ -5,8 +5,8 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=0.428\textwidth,
-height=0.35\textwidth,
+width=0.761\textwidth,
+height=0.65\textwidth,
 at={(0\textwidth,0\textwidth)},
 scale only axis,
 xmin=-2,
@@ -94,14 +94,5 @@ axis background/.style={fill=white}
 1.95	0.0223149147769663\\
 2	0.0183156388887342\\
 };
-
-\draw[<-][line width=1.2pt,>=latex] (-1,0.4) -- (-0.2,0.4) node[right=0.0pt] {\small $\sigma$};
-\draw[->][line width=1.2pt,>=latex] (0.2,0.4) -- (1,0.4);
-
-\draw[dashed][line width=1.2pt] (0,-0.1) -- (0, 0.33);
-\draw[dashed][line width=1.2pt] (0, 0.48) -- (0,1);
-\draw[fill=black] (0,1) circle (0.06cm)
-node[anchor=south] {\small $c$};
-
 \end{axis}
 \end{tikzpicture}%
